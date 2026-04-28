@@ -686,18 +686,30 @@ input,select,textarea { font-family:var(--font); }
 .manifesto {
   position: relative;
   z-index: 10;
-  background: var(--light-2);
+  background: #060709;
   padding: var(--v-sec) var(--h-pad);
   text-align: center;
+  overflow: hidden;
+  min-height: 520px;
+  display: flex;
+  align-items: center;
 }
-.manifesto-inner { max-width: var(--max-w); margin: 0 auto; }
+.manifesto-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+.manifesto-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
 .manifesto-text {
   font-family: var(--font-c);
   font-size: clamp(24px, 4vw, 52px);
   font-weight: 300;
   letter-spacing: -0.005em;
   line-height: 1.2;
-  color: var(--tl);
+  color: rgba(255,255,255,0.92);
   max-width: 920px;
   margin: 0 auto;
 }
@@ -770,6 +782,16 @@ input,select,textarea { font-family:var(--font); }
 .portfolio-row-num   { font-family: var(--font-c); font-size: 11px; letter-spacing: 0.14em; color: var(--t4); }
 .portfolio-row-title { font-family: var(--font-c); font-size: clamp(1rem, 2vw, 1.55rem); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; color: var(--t1); }
 .portfolio-row-cat   { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t4); white-space: nowrap; }
+@media (max-width: 560px) {
+  .portfolio-row-trigger {
+    grid-template-columns: 32px 1fr 20px;
+    gap: 0.7rem;
+    padding: 1.2rem 0;
+  }
+  .portfolio-row-cat { display: none; }
+  .portfolio-row-title { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .portfolio-row-num { font-size: 10px; }
+}
 .portfolio-row-icon  { color: var(--t3); font-size: 20px; font-weight: 200; line-height:1; transition: transform 0.35s cubic-bezier(0.16,1,0.3,1); text-align:center; }
 .portfolio-row.is-open .portfolio-row-icon { transform: rotate(45deg); }
 
@@ -844,6 +866,11 @@ input,select,textarea { font-family:var(--font); }
 .artist-body { font-size: 15px; font-weight: 300; color: var(--t2); line-height: 1.8; max-width: 480px; }
 .artist-body + .artist-body { margin-top: 1rem; }
 .artist-listen { margin-top: 2rem; display: flex; gap: 0.7rem; flex-wrap: wrap; }
+@media (max-width: 560px) {
+  .artist-listen { flex-wrap: nowrap; gap: 0.4rem; }
+  .artist-platform { font-size: 9.5px; padding: 7px 10px; gap: 5px; letter-spacing: 0.08em; }
+  .artist-platform svg { width: 10px; height: 10px; }
+}
 .artist-platform {
   display: inline-flex;
   align-items: center;
@@ -1284,6 +1311,7 @@ input,select,textarea { font-family:var(--font); }
      MANIFESTO
      ================================================================ -->
 <section class="manifesto">
+  <canvas class="manifesto-canvas" id="soundwaveCanvas"></canvas>
   <div class="manifesto-inner">
     <p class="manifesto-text" data-anim>
       Professional audio that captures every dimension of sound — from the studio to the stage, for music, film, and live events. Front-of-house to the final mix.
@@ -1700,6 +1728,133 @@ input,select,textarea { font-family:var(--font); }
         waveBars.appendChild(s);
       });
   }
+
+  /* ================================================================
+     PARTICLE MESH — 3D wave surface (dot grid, Joy Division style)
+     ================================================================ */
+  (function () {
+    const canvas = document.getElementById('soundwaveCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, visible = true;
+    const dpr    = Math.min(window.devicePixelRatio || 1, 2);
+    const COLS   = 88;   /* horizontal dots */
+    const ROWS   = 38;   /* depth rows (back → front) */
+    const NBUCK  = 20;   /* opacity quantisation buckets */
+
+    /* pre-allocated flat arrays — no GC per frame */
+    const buckets = Array.from({ length: NBUCK + 1 }, () => new Float32Array(COLS * 4));
+    const bCount  = new Int32Array(NBUCK + 1);
+
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      W = canvas.width  = Math.round(r.width  * dpr);
+      H = canvas.height = Math.round(r.height * dpr);
+    }
+
+    /*
+      Wave height at normalised position (nx ∈ [-0.5,0.5], nz ∈ [-0.5,0.5]).
+      Returns a value roughly in [-1, 1].
+
+      — Two travelling waves going in opposite directions keep the
+        surface alive without looking mechanical.
+      — The cross-wave term (nx+nz) makes adjacent rows differ in phase,
+        giving the surface genuine 3-D curvature.
+      — The amplitude envelope kills the wave at the left/right edges so
+        the mesh tapers cleanly instead of cutting off hard.
+    */
+    function waveH(nx, nz, t) {
+      const envX = Math.pow(Math.max(0, 1 - Math.abs(nx) * 2.05), 0.62);
+
+      const h =
+        Math.sin(nx * Math.PI *  5.4 + t * 0.90)                    * 0.50 +
+        Math.sin(nx * Math.PI *  2.9 - t * 0.55)                    * 0.27 +
+        Math.sin((nx * 2.6 + nz * 3.9) * Math.PI + t * 0.68)       * 0.14 +  /* cross-wave */
+        Math.sin(nx * Math.PI *  9.8 + t * 1.40 + nz * Math.PI * 2)* 0.06 +  /* fine detail */
+        Math.sin(nz * Math.PI *  2.2 + t * 0.35)                    * 0.03;   /* depth roll  */
+
+      return h * envX;
+    }
+
+    let t = 0;
+
+    function draw() {
+      if (!visible) { requestAnimationFrame(draw); return; }
+      ctx.clearRect(0, 0, W, H);
+
+      /* ── grid layout ── */
+      const gTop  = H * 0.17;   /* back-row baseline Y  */
+      const gBot  = H * 0.72;   /* front-row baseline Y */
+      const gW    = W * 0.84;   /* front-row X span     */
+      const maxAmp = H * 0.245; /* front-row amplitude  */
+      const dotR  = 1.15 * dpr; /* dot radius (px)      */
+
+      /* reset bucket counts */
+      bCount.fill(0);
+
+      /* ── compute particles (back → front so front paints last) ── */
+      for (let row = 0; row < ROWS; row++) {
+        const tR     = row / (ROWS - 1);          /* 0=back  1=front */
+        const pScale = 0.36 + tR * 0.64;          /* perspective width scale */
+        const baseY  = gTop + tR * (gBot - gTop); /* baseline Y for this row */
+        const amp    = maxAmp * pScale;
+        const nz     = 0.5 - tR;                  /* 0.5=back −0.5=front    */
+
+        for (let col = 0; col < COLS; col++) {
+          const tC = col / (COLS - 1);
+          const nx = tC - 0.5;                    /* −0.5 … +0.5            */
+
+          const h  = waveH(nx, nz, t);
+          const sx = W * 0.5 + nx * gW * pScale;
+          const sy = baseY - h * amp;
+
+          /* peaks bright, troughs dim; back rows more transparent */
+          const hN    = (h + 1) * 0.5;            /* 0–1                    */
+          const alpha = Math.min(0.90,
+            0.045 + hN * 0.64 * (0.45 + tR * 0.55)
+          );
+          const bi = Math.min(NBUCK, Math.round(alpha * NBUCK));
+          const off = bCount[bi]++ * 2;
+          if (off + 1 < buckets[bi].length) {
+            buckets[bi][off]     = sx;
+            buckets[bi][off + 1] = sy;
+          }
+        }
+      }
+
+      /* ── batch-draw each opacity level ── */
+      for (let b = 0; b <= NBUCK; b++) {
+        if (bCount[b] === 0) continue;
+        ctx.fillStyle = `rgba(255,255,255,${(b / NBUCK).toFixed(3)})`;
+        ctx.beginPath();
+        const n = bCount[b];
+        const arr = buckets[b];
+        for (let i = 0; i < n; i++) {
+          const px = arr[i * 2], py = arr[i * 2 + 1];
+          ctx.moveTo(px + dotR, py);
+          ctx.arc(px, py, dotR, 0, 6.2832);
+        }
+        ctx.fill();
+      }
+
+      /* ── soft vignette to frame the mesh ── */
+      const vig = ctx.createRadialGradient(W*.5,H*.46,H*.06, W*.5,H*.46,W*.62);
+      vig.addColorStop(0,   'rgba(0,0,0,0)');
+      vig.addColorStop(0.7, 'rgba(0,0,0,0)');
+      vig.addColorStop(1,   'rgba(6,7,9,0.78)');
+      ctx.fillStyle = vig;
+      ctx.fillRect(0, 0, W, H);
+
+      t += 0.0075;
+      requestAnimationFrame(draw);
+    }
+
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 })
+      .observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+    draw();
+  })();
 
 })();
 </script>
