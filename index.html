@@ -45,9 +45,9 @@ input,select,textarea { font-family:var(--font); }
    ================================================================ */
 [data-anim] {
   opacity: 0;
-  transform: translateY(72px) scale(0.975);
-  transition: opacity 1.15s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 1.15s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(100px) scale(0.968);
+  transition: opacity 1.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.35s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: transform, opacity;
 }
 [data-anim].is-visible {
@@ -57,9 +57,9 @@ input,select,textarea { font-family:var(--font); }
 /* image variant — scale from slightly zoomed */
 [data-anim="img"] {
   opacity: 0;
-  transform: scale(1.04);
-  transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: scale(1.06);
+  transition: opacity 1.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.55s cubic-bezier(0.16, 1, 0.3, 1);
 }
 [data-anim="img"].is-visible {
   opacity: 1;
@@ -69,23 +69,34 @@ input,select,textarea { font-family:var(--font); }
 [data-anim="clip"] {
   opacity: 0;
   clip-path: inset(0 0 100% 0);
-  transform: translateY(24px);
-  transition: opacity 0.01s, clip-path 1.05s cubic-bezier(0.22, 1, 0.36, 1),
-              transform 1.05s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translateY(32px);
+  transition: opacity 0.01s, clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 [data-anim="clip"].is-visible {
   opacity: 1;
   clip-path: inset(0 0 0% 0);
   transform: translateY(0);
 }
+/* horizontal slide — headings / eyebrows */
+[data-anim="left"] {
+  opacity: 0;
+  transform: translateX(-60px);
+  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-anim="left"].is-visible {
+  opacity: 1;
+  transform: translateX(0);
+}
 /* stagger siblings */
-[data-anim]:nth-child(2) { transition-delay: 0.1s; }
-[data-anim]:nth-child(3) { transition-delay: 0.22s; }
-[data-anim]:nth-child(4) { transition-delay: 0.34s; }
-[data-anim]:nth-child(5) { transition-delay: 0.42s; }
-[data-anim][data-delay="1"] { transition-delay: 0.14s; }
-[data-anim][data-delay="2"] { transition-delay: 0.28s; }
-[data-anim][data-delay="3"] { transition-delay: 0.44s; }
+[data-anim]:nth-child(2) { transition-delay: 0.12s; }
+[data-anim]:nth-child(3) { transition-delay: 0.26s; }
+[data-anim]:nth-child(4) { transition-delay: 0.40s; }
+[data-anim]:nth-child(5) { transition-delay: 0.50s; }
+[data-anim][data-delay="1"] { transition-delay: 0.16s; }
+[data-anim][data-delay="2"] { transition-delay: 0.32s; }
+[data-anim][data-delay="3"] { transition-delay: 0.50s; }
 
 /* ================================================================
    HEADER — floating pill
@@ -172,9 +183,10 @@ input,select,textarea { font-family:var(--font); }
 }
 .hdr-nav a {
   font-family: var(--font);
-  font-size: 13.5px;
+  font-size: 12px;
   font-weight: 400;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.7px;
+  text-transform: uppercase;
   color: rgba(255,255,255,0.62);
   transition: color 0.2s;
   white-space: nowrap;
@@ -762,7 +774,7 @@ input,select,textarea { font-family:var(--font); }
   transform: scale(1.1);
 }
 .portfolio-row:hover::before { opacity: 0.13; }
-.portfolio-row.is-open::before { opacity: 0; }
+.portfolio-row.is-open::before { opacity: 0.32; filter: blur(0px) saturate(1); }
 
 .portfolio-row-trigger {
   width: 100%;
@@ -804,30 +816,71 @@ input,select,textarea { font-family:var(--font); }
 .portfolio-row.is-open .portfolio-panel { grid-template-rows: 1fr; }
 .portfolio-panel-inner { overflow: hidden; }
 .portfolio-panel-content {
-  position: relative;
-  min-height: 360px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 1.6rem 0 1.8rem;
+  gap: 14px;
+}
+.portfolio-panel-bg { display: none; }
+
+/* ── Play Preview + visible Spotify compact player ── */
+.spot-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+  width: 100%;
+}
+.spot-player {
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  width: 100%;
+  max-width: 420px;
+  transition: max-height 0.52s cubic-bezier(0.16,1,0.3,1), opacity 0.38s ease;
+}
+.spot-player.is-open { max-height: 90px; opacity: 1; }
+.spot-player iframe { display: block; width: 100%; height: 80px; border-radius: 10px; }
+.spot-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+  color: #fff;
+}
+.spot-btn:hover .spot-btn-play { transform: scale(1.1); }
+.spot-btn-play {
+  width: 40px;
+  height: 40px;
+  background: #fff;
+  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 3rem var(--h-pad);
-  margin-bottom: 1.5rem;
-  border-radius: 10px;
-  overflow: hidden;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.portfolio-panel-bg {
-  position: absolute;
-  inset: 0;
-  background: var(--row-bg, #111) center/cover no-repeat;
-  filter: brightness(0.25) saturate(0.7);
-  transform: scale(1.05);
+.spot-btn.is-playing .spot-btn-play { background: rgba(255,255,255,0.75); }
+.spot-btn-play svg { width: 17px; height: 17px; fill: #0d0e10; }
+.spot-btn-play .ic-play  { margin-left: 2px; }
+.spot-btn-play .ic-stop  { display: none; margin-left: 0; }
+.spot-btn.is-playing .ic-play { display: none; }
+.spot-btn.is-playing .ic-stop { display: block; }
+.spot-btn-text {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-family: var(--font);
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.65);
+  white-space: nowrap;
 }
-.portfolio-panel-spotify {
-  position: relative;
-  z-index: 2;
-  width: 100%;
-  max-width: 640px;
-}
-.portfolio-panel-spotify iframe { border-radius: 12px; display: block; }
+.spot-btn.is-playing .spot-btn-text { color: rgba(255,255,255,0.9); }
 
 /* ================================================================
    ARTIST PAGE
@@ -858,9 +911,8 @@ input,select,textarea { font-family:var(--font); }
 }
 .artist-media img {
   width: 100%;
-  aspect-ratio: 4/5;
-  object-fit: cover;
-  object-position: center top;
+  height: auto;
+  display: block;
   filter: brightness(0.88) saturate(0.9);
 }
 .artist-body { font-size: 15px; font-weight: 300; color: var(--t2); line-height: 1.8; max-width: 480px; }
@@ -886,11 +938,11 @@ input,select,textarea { font-family:var(--font); }
 }
 .artist-platform:hover { color: #fff; border-color: rgba(255,255,255,0.35); }
 .artist-platform svg { width: 12px; height: 12px; fill: currentColor; }
-.artist-media { overflow: hidden; position: relative; }
+.artist-media { position: relative; }
 .artist-media img {
   width: 100%;
-  aspect-ratio: 1/1;
-  object-fit: cover;
+  height: auto;
+  display: block;
   filter: brightness(0.7) saturate(0.85);
 }
 .artist-wave {
@@ -919,19 +971,90 @@ input,select,textarea { font-family:var(--font); }
 .svc-list { border-top: 1px solid rgba(30,33,36,0.08); }
 .svc-row {
   display: grid;
-  grid-template-columns: 50px 1fr 1fr;
-  align-items: start;
+  grid-template-columns: 50px 1fr 1fr 200px;
+  align-items: center;
   padding: 1.7rem 0;
   border-bottom: 1px solid rgba(30,33,36,0.08);
   color: var(--tl);
   cursor: pointer;
   transition: padding-left 0.3s cubic-bezier(0.4,0,0.2,1);
+  overflow: hidden;
 }
 .svc-row:hover { padding-left: 10px; }
 .svc-num { font-size: 10px; letter-spacing: 0.1em; color: var(--tlm); padding-top: 5px; font-variant-numeric: tabular-nums; }
 .svc-title { font-family: var(--font-c); font-size: clamp(20px, 2.8vw, 32px); font-weight: 300; }
 .svc-desc { font-size: 13.5px; font-weight: 300; color: var(--tlm); line-height: 1.6; }
+@media (max-width: 900px) { .svc-row { grid-template-columns: 50px 1fr 1fr; } .svc-icon { display: none !important; } }
 @media (max-width: 620px) { .svc-row { grid-template-columns: 44px 1fr; } .svc-desc { display: none; } }
+
+/* ── 3D service icons ── */
+.svc-icon { display: flex; align-items: center; justify-content: center; height: 86px; }
+
+/* === MIXER (Mixing & Mastering) === */
+.icon-mixer {
+  transform: perspective(420px) rotateX(24deg) rotateY(-10deg);
+  animation: iconFloat 5s ease-in-out infinite;
+}
+@keyframes iconFloat { 0%,100%{transform:perspective(420px) rotateX(24deg) rotateY(-10deg) translateY(0)} 50%{transform:perspective(420px) rotateX(24deg) rotateY(-10deg) translateY(-6px)} }
+.mixer-surface {
+  width: 148px; height: 76px;
+  background: linear-gradient(150deg,#28292c,#1a1b1e);
+  border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.09);
+  box-shadow: 0 14px 36px rgba(0,0,0,0.32), inset 0 1px 0 rgba(255,255,255,0.07);
+  display: flex; align-items: flex-end; justify-content: center; gap: 9px; padding: 0 12px 8px;
+}
+.mf { width: 7px; height: 48px; background: rgba(255,255,255,0.08); border-radius: 3px; position: relative; }
+.mf::after { content:''; position:absolute; left:-4px; width:15px; height:9px; background:#d8d8d6; border-radius:2px; box-shadow:0 2px 5px rgba(0,0,0,0.5); }
+.mf:nth-child(1)::after { bottom:62%; animation: mf1 3.4s ease-in-out infinite; }
+.mf:nth-child(2)::after { bottom:28%; animation: mf2 2.9s ease-in-out infinite; }
+.mf:nth-child(3)::after { bottom:72%; animation: mf3 3.7s ease-in-out infinite; }
+.mf:nth-child(4)::after { bottom:44%; animation: mf1 4.1s ease-in-out infinite reverse; }
+.mf:nth-child(5)::after { bottom:56%; animation: mf2 3.2s ease-in-out infinite 0.6s; }
+@keyframes mf1{0%,100%{bottom:62%}50%{bottom:22%}} @keyframes mf2{0%,100%{bottom:28%}50%{bottom:68%}} @keyframes mf3{0%,100%{bottom:72%}50%{bottom:38%}}
+
+/* === KEYBOARD (Music Production) === */
+.icon-keyboard { transform: perspective(500px) rotateX(34deg); animation: iconFloat2 5s ease-in-out infinite 0.7s; }
+@keyframes iconFloat2 { 0%,100%{transform:perspective(500px) rotateX(34deg) translateY(0)} 50%{transform:perspective(500px) rotateX(34deg) translateY(-6px)} }
+.kbd-body {
+  background: #1e2024; padding: 7px 9px 5px; border-radius: 5px 5px 2px 2px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.07);
+  display: flex; gap: 2px;
+}
+.kw { width: 15px; height: 50px; background: #f0efec; border-radius: 0 0 3px 3px; border: 1px solid #bbb; position: relative; }
+.kb { width: 10px; height: 31px; background: #1a1a1a; border-radius: 0 0 2px 2px; margin: 0 -5px; position: relative; z-index: 1; }
+.kw:nth-child(3) { animation: kp 4s ease-in-out infinite 0.3s; }
+.kw:nth-child(6) { animation: kp 4s ease-in-out infinite 1.4s; }
+.kw:nth-child(9) { animation: kp 4s ease-in-out infinite 2.5s; }
+.kb:nth-child(2) { animation: kpb 4s ease-in-out infinite 0.9s; }
+.kb:nth-child(5) { animation: kpb 4s ease-in-out infinite 2.0s; }
+@keyframes kp { 0%,85%,100%{transform:translateY(0)} 42%{transform:translateY(3px)} }
+@keyframes kpb { 0%,85%,100%{transform:translateY(0)} 42%{transform:translateY(2px)} }
+
+/* === MICROPHONE (Studio Session) === */
+.icon-mic { position: relative; animation: micFloat 4.5s ease-in-out infinite 1.2s; }
+@keyframes micFloat { 0%,100%{transform:translateY(0) rotate(-2deg)} 50%{transform:translateY(-7px) rotate(1.5deg)} }
+.mic-wrap { position: relative; display: flex; flex-direction: column; align-items: center; }
+.mic-body { width: 30px; height: 52px; background: linear-gradient(155deg,#3c4048,#1e2126); border-radius: 15px; position: relative; box-shadow: 0 10px 28px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.12); }
+.mic-grille { position:absolute; inset:6px 4px 16px; background:repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(255,255,255,0.07) 3px,rgba(255,255,255,0.07) 4px); border-radius:11px; }
+.mic-stem { width:2px; height:14px; background:#2a2d32; margin:0 auto; }
+.mic-base { width:38px; height:4px; background:linear-gradient(90deg,transparent,#2a2d32,transparent); border-radius:2px; }
+.mic-ring { position:absolute; top:26px; left:50%; transform:translateX(-50%); border-radius:50%; border:1.5px solid rgba(140,160,220,0.3); animation:mring 2.6s ease-out infinite; pointer-events:none; }
+.mic-ring:nth-child(2){animation-delay:.9s} .mic-ring:nth-child(3){animation-delay:1.8s}
+@keyframes mring{0%{width:16px;height:16px;opacity:.55}100%{width:80px;height:80px;opacity:0}}
+
+/* === WAVEFORM (Sound Design) === */
+.icon-wave { display:flex; align-items:center; gap:4px; height:58px; animation: iconFloat2 5s ease-in-out infinite 1.8s; transform-origin:center bottom; }
+.wb { width:7px; border-radius:3px; background:linear-gradient(to top, rgba(80,100,180,0.45), rgba(160,180,255,0.85)); transform-origin:bottom; }
+.wb:nth-child(1){height:18px;animation:wb1 1.45s ease-in-out infinite}
+.wb:nth-child(2){height:38px;animation:wb1 1.9s ease-in-out infinite .1s}
+.wb:nth-child(3){height:52px;animation:wb1 1.2s ease-in-out infinite .2s}
+.wb:nth-child(4){height:44px;animation:wb1 2.1s ease-in-out infinite .05s}
+.wb:nth-child(5){height:58px;animation:wb1 1.6s ease-in-out infinite .3s}
+.wb:nth-child(6){height:46px;animation:wb1 1.35s ease-in-out infinite .15s}
+.wb:nth-child(7){height:34px;animation:wb1 1.75s ease-in-out infinite .25s}
+.wb:nth-child(8){height:22px;animation:wb1 2.0s ease-in-out infinite .1s}
+@keyframes wb1{0%,100%{transform:scaleY(.25)}50%{transform:scaleY(1)}}
 
 /* ================================================================
    SPLIT / PHILOSOPHY
@@ -1340,9 +1463,17 @@ input,select,textarea { font-family:var(--font); }
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
-            <div class="portfolio-panel-bg" style="background-image:url('Screenshot%202026-02-15%20at%2017.39_edited.jpg')"></div>
-            <div class="portfolio-panel-spotify">
-              <iframe src="https://open.spotify.com/embed/track/4S6q5OVfl56zgKVNieNgUt?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <div class="portfolio-panel-bg"></div>
+            <div class="spot-wrap">
+              <button class="spot-btn" data-track="4S6q5OVfl56zgKVNieNgUt">
+                <div class="spot-btn-play">
+                  <svg viewBox="0 0 24 24"><path class="ic-play" d="M8 5v14l11-7z"/><path class="ic-stop" d="M6 6h12v12H6z"/></svg>
+                </div>
+                <span class="spot-btn-text">Play Preview</span>
+              </button>
+              <div class="spot-player">
+                <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -1360,9 +1491,17 @@ input,select,textarea { font-family:var(--font); }
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
-            <div class="portfolio-panel-bg" style="background-image:url('Screenshot%202026-02-15%20at%2017.39.42.png')"></div>
-            <div class="portfolio-panel-spotify">
-              <iframe src="https://open.spotify.com/embed/track/4XzYh04RaJEAhFMPrzqzHF?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <div class="portfolio-panel-bg"></div>
+            <div class="spot-wrap">
+              <button class="spot-btn" data-track="4XzYh04RaJEAhFMPrzqzHF">
+                <div class="spot-btn-play">
+                  <svg viewBox="0 0 24 24"><path class="ic-play" d="M8 5v14l11-7z"/><path class="ic-stop" d="M6 6h12v12H6z"/></svg>
+                </div>
+                <span class="spot-btn-text">Play Preview</span>
+              </button>
+              <div class="spot-player">
+                <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -1380,9 +1519,17 @@ input,select,textarea { font-family:var(--font); }
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
-            <div class="portfolio-panel-bg" style="background-image:url('Screenshot%202026-02-15%20at%2017.39.23.png')"></div>
-            <div class="portfolio-panel-spotify">
-              <iframe src="https://open.spotify.com/embed/track/6wzfJQZy2967aOrzSmsob9?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <div class="portfolio-panel-bg"></div>
+            <div class="spot-wrap">
+              <button class="spot-btn" data-track="6wzfJQZy2967aOrzSmsob9">
+                <div class="spot-btn-play">
+                  <svg viewBox="0 0 24 24"><path class="ic-play" d="M8 5v14l11-7z"/><path class="ic-stop" d="M6 6h12v12H6z"/></svg>
+                </div>
+                <span class="spot-btn-text">Play Preview</span>
+              </button>
+              <div class="spot-player">
+                <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -1400,9 +1547,17 @@ input,select,textarea { font-family:var(--font); }
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
-            <div class="portfolio-panel-bg" style="background-image:url('Screenshot%202026-02-15%20at%2017.38.40.png')"></div>
-            <div class="portfolio-panel-spotify">
-              <iframe src="https://open.spotify.com/embed/track/7xioHxZ8RUiKhanjdEC2fw?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <div class="portfolio-panel-bg"></div>
+            <div class="spot-wrap">
+              <button class="spot-btn" data-track="7xioHxZ8RUiKhanjdEC2fw">
+                <div class="spot-btn-play">
+                  <svg viewBox="0 0 24 24"><path class="ic-play" d="M8 5v14l11-7z"/><path class="ic-stop" d="M6 6h12v12H6z"/></svg>
+                </div>
+                <span class="spot-btn-text">Play Preview</span>
+              </button>
+              <div class="spot-player">
+                <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -1420,9 +1575,17 @@ input,select,textarea { font-family:var(--font); }
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
-            <div class="portfolio-panel-bg" style="background-image:url('Screenshot%202026-02-15%20at%2017.58.39.png')"></div>
-            <div class="portfolio-panel-spotify">
-              <iframe src="https://open.spotify.com/embed/track/0RvJpM22Kdo9SyIq4UoNUG?utm_source=generator&theme=0" width="100%" height="152" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+            <div class="portfolio-panel-bg"></div>
+            <div class="spot-wrap">
+              <button class="spot-btn" data-track="0RvJpM22Kdo9SyIq4UoNUG">
+                <div class="spot-btn-play">
+                  <svg viewBox="0 0 24 24"><path class="ic-play" d="M8 5v14l11-7z"/><path class="ic-stop" d="M6 6h12v12H6z"/></svg>
+                </div>
+                <span class="spot-btn-text">Play Preview</span>
+              </button>
+              <div class="spot-player">
+                <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" loading="lazy"></iframe>
+              </div>
             </div>
           </div>
         </div>
@@ -1440,8 +1603,8 @@ input,select,textarea { font-family:var(--font); }
     <div>
       <h2 class="artist-heading" data-anim style="white-space:nowrap">Artist Page</h2>
       <p class="artist-body" data-anim data-delay="1">Beyond the faders and the frequency charts lies my true obsession: building worlds through sound. When I'm not engineering for clients, I'm producing my own work.</p>
-      <p class="artist-body" data-anim data-delay="2">"This is my portfolio of original works. It's where my technical expertise meets my creative intuition. The name <em>RVNNER</em> is associated to the capability to run through various genres, moods and textures used to create something new, destroying every label.</p>
-      <p class="artist-body" data-anim data-delay="2">My expertise spans between three main aspects that includes beats, remix and original production."</p>
+      <p class="artist-body" data-anim data-delay="2">This is my portfolio of original works. It's where my technical expertise meets my creative intuition. The name <em>RVNNER</em> is associated to the capability to run through various genres, moods and textures used to create something new, destroying every label.</p>
+      <p class="artist-body" data-anim data-delay="2">My expertise spans between three main aspects that includes beats, remix and original production.</p>
       <div class="artist-listen" data-anim data-delay="3">
         <a href="https://open.spotify.com/album/2zgkWG3LRqEJHWLLeOCznQ" target="_blank" rel="noopener" class="artist-platform">
           <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
@@ -1477,36 +1640,56 @@ input,select,textarea { font-family:var(--font); }
         <span class="svc-num">01</span>
         <span class="svc-title">Mixing &amp; Mastering</span>
         <span class="svc-desc">Refined dynamics and spatial balance engineered for your final release — streaming, vinyl, or broadcast.</span>
+        <div class="svc-icon">
+          <div class="icon-mixer">
+            <div class="mixer-surface">
+              <div class="mf"></div><div class="mf"></div><div class="mf"></div><div class="mf"></div><div class="mf"></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="svc-row" data-anim>
         <span class="svc-num">02</span>
         <span class="svc-title">Live Sound Engineering</span>
         <span class="svc-desc">Front-of-house and monitor engineering for concerts, festivals, arenas, and world tours.</span>
+        <div class="svc-icon"></div>
       </div>
       <div class="svc-row" data-anim>
         <span class="svc-num">03</span>
-        <span class="svc-title">Film &amp; Post-Production</span>
-        <span class="svc-desc">Sound design, dialogue editing, and Dolby Atmos mixing for film, TV, and streaming.</span>
+        <span class="svc-title">Music Production</span>
+        <span class="svc-desc">Full-service music production from concept through final delivery — any genre, any scale.</span>
+        <div class="svc-icon">
+          <div class="icon-keyboard">
+            <div class="kbd-body">
+              <div class="kw"></div><div class="kb"></div><div class="kw"></div><div class="kb"></div><div class="kw"></div><div class="kw"></div><div class="kb"></div><div class="kw"></div><div class="kb"></div><div class="kw"></div><div class="kb"></div><div class="kw"></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="svc-row" data-anim>
         <span class="svc-num">04</span>
-        <span class="svc-title">Music Production</span>
-        <span class="svc-desc">Full-service music production from concept through final delivery — any genre, any scale.</span>
+        <span class="svc-title">Studio Session</span>
+        <span class="svc-desc">In-studio recording and session engineering — artist-focused, precision-driven from first take to final comp.</span>
+        <div class="svc-icon">
+          <div class="icon-mic">
+            <div class="mic-wrap">
+              <div class="mic-ring"></div><div class="mic-ring"></div><div class="mic-ring"></div>
+              <div class="mic-body"><div class="mic-grille"></div></div>
+              <div class="mic-stem"></div>
+              <div class="mic-base"></div>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="svc-row" data-anim>
         <span class="svc-num">05</span>
-        <span class="svc-title">Broadcast &amp; Events</span>
-        <span class="svc-desc">Technical audio direction for broadcast, corporate, and luxury live events worldwide.</span>
-      </div>
-      <div class="svc-row" data-anim>
-        <span class="svc-num">06</span>
-        <span class="svc-title">Studio Session</span>
-        <span class="svc-desc">In-studio recording and session engineering — artist-focused, precision-driven from first take to final comp.</span>
-      </div>
-      <div class="svc-row" data-anim>
-        <span class="svc-num">07</span>
         <span class="svc-title">Sound Design</span>
         <span class="svc-desc">Original sound design for film, advertising, interactive media, and live performance.</span>
+        <div class="svc-icon">
+          <div class="icon-wave">
+            <div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div><div class="wb"></div>
+          </div>
+        </div>
       </div>
     </div>
     <div style="text-align:center;margin-top:3.5rem" data-anim>
@@ -1609,7 +1792,7 @@ input,select,textarea { font-family:var(--font); }
         observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.06, rootMargin: '0px 0px -16px 0px' });
+  }, { threshold: 0.04, rootMargin: '0px 0px -48px 0px' });
   animEls.forEach(el => observer.observe(el));
 
   /* ---- HEADER SCROLL TINT ---- */
@@ -1718,6 +1901,28 @@ input,select,textarea { font-family:var(--font); }
     });
   });
 
+  /* ---- SPOTIFY PREVIEW (visible compact player, autoplay) ---- */
+  document.querySelectorAll('.spot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const wrap     = btn.closest('.spot-wrap');
+      const player   = wrap.querySelector('.spot-player');
+      const iframe   = player.querySelector('iframe');
+      const isOpen   = player.classList.contains('is-open');
+
+      /* close all others first */
+      document.querySelectorAll('.spot-player.is-open').forEach(p => p.classList.remove('is-open'));
+      document.querySelectorAll('.spot-btn.is-playing').forEach(b => b.classList.remove('is-playing'));
+
+      if (!isOpen) {
+        if (!iframe.getAttribute('src')) {
+          iframe.src = `https://open.spotify.com/embed/track/${btn.dataset.track}?utm_source=generator&theme=0&autoplay=1`;
+        }
+        player.classList.add('is-open');
+        btn.classList.add('is-playing');
+      }
+    });
+  });
+
   const waveBars = document.getElementById('waveBars');
   if (waveBars) {
     [20,38,58,42,72,52,32,68,48,82,62,36,76,56,42,28,62,46,72,56,36,82,52,66,42,32,76,52,36,62]
@@ -1730,19 +1935,21 @@ input,select,textarea { font-family:var(--font); }
   }
 
   /* ================================================================
-     PARTICLE MESH — 3D wave surface (dot grid, Joy Division style)
+     PARTICLE MESH — 3D wave surface (Joy Division ridgeline + dots)
      ================================================================ */
   (function () {
     const canvas = document.getElementById('soundwaveCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
     let W = 0, H = 0, visible = true;
-    const dpr    = Math.min(window.devicePixelRatio || 1, 2);
-    const COLS   = 88;   /* horizontal dots */
-    const ROWS   = 38;   /* depth rows (back → front) */
-    const NBUCK  = 20;   /* opacity quantisation buckets */
+    const dpr   = Math.min(window.devicePixelRatio || 1, 2);
+    const COLS  = 120;   /* horizontal samples per row   */
+    const ROWS  = 56;    /* depth rows, back → front     */
+    const NBUCK = 28;    /* dot opacity buckets          */
 
     /* pre-allocated flat arrays — no GC per frame */
+    const POS     = new Float32Array(COLS * ROWS * 2);    /* all (sx,sy) pairs       */
+    const HVAL    = new Float32Array(COLS * ROWS);         /* raw wave height per dot */
     const buckets = Array.from({ length: NBUCK + 1 }, () => new Float32Array(COLS * 4));
     const bCount  = new Int32Array(NBUCK + 1);
 
@@ -1752,27 +1959,17 @@ input,select,textarea { font-family:var(--font); }
       H = canvas.height = Math.round(r.height * dpr);
     }
 
-    /*
-      Wave height at normalised position (nx ∈ [-0.5,0.5], nz ∈ [-0.5,0.5]).
-      Returns a value roughly in [-1, 1].
-
-      — Two travelling waves going in opposite directions keep the
-        surface alive without looking mechanical.
-      — The cross-wave term (nx+nz) makes adjacent rows differ in phase,
-        giving the surface genuine 3-D curvature.
-      — The amplitude envelope kills the wave at the left/right edges so
-        the mesh tapers cleanly instead of cutting off hard.
-    */
     function waveH(nx, nz, t) {
-      const envX = Math.pow(Math.max(0, 1 - Math.abs(nx) * 2.05), 0.62);
-
+      const envX = Math.pow(Math.max(0, 1 - Math.abs(nx) * 2.0), 0.58);
       const h =
-        Math.sin(nx * Math.PI *  5.4 + t * 0.90)                    * 0.50 +
-        Math.sin(nx * Math.PI *  2.9 - t * 0.55)                    * 0.27 +
-        Math.sin((nx * 2.6 + nz * 3.9) * Math.PI + t * 0.68)       * 0.14 +  /* cross-wave */
-        Math.sin(nx * Math.PI *  9.8 + t * 1.40 + nz * Math.PI * 2)* 0.06 +  /* fine detail */
-        Math.sin(nz * Math.PI *  2.2 + t * 0.35)                    * 0.03;   /* depth roll  */
-
+        Math.sin(nx * Math.PI *  5.4 + t * 0.88)                        * 0.48 +
+        Math.sin(nx * Math.PI *  2.9 - t * 0.52)                        * 0.26 +
+        Math.sin((nx * 2.6 + nz * 3.9) * Math.PI + t * 0.65)           * 0.15 +
+        Math.sin(nx * Math.PI *  9.8 + t * 1.38 + nz * Math.PI * 2)    * 0.07 +
+        Math.sin(nz * Math.PI *  2.2 + t * 0.34)                        * 0.04 +
+        Math.sin((nx * 1.8 - nz * 2.4) * Math.PI - t * 0.46)           * 0.09 +
+        Math.sin(nx * Math.PI * 14.5 + t * 2.20 + nz * Math.PI * 1.3)  * 0.028 +
+        Math.sin(nx * Math.PI *  7.1 + t * 1.05 - nz * Math.PI * 0.8)  * 0.06;
       return h * envX;
     }
 
@@ -1782,70 +1979,87 @@ input,select,textarea { font-family:var(--font); }
       if (!visible) { requestAnimationFrame(draw); return; }
       ctx.clearRect(0, 0, W, H);
 
-      /* ── grid layout ── */
-      const gTop  = H * 0.17;   /* back-row baseline Y  */
-      const gBot  = H * 0.72;   /* front-row baseline Y */
-      const gW    = W * 0.84;   /* front-row X span     */
-      const maxAmp = H * 0.245; /* front-row amplitude  */
-      const dotR  = 1.15 * dpr; /* dot radius (px)      */
+      const gTop   = H * 0.14;
+      const gBot   = H * 0.76;
+      const gW     = W * 0.88;
+      const maxAmp = H * 0.275;
+      const dotR   = 0.95 * dpr;
 
-      /* reset bucket counts */
+      /* ── Phase 1: compute all positions + bucket dots ── */
       bCount.fill(0);
-
-      /* ── compute particles (back → front so front paints last) ── */
       for (let row = 0; row < ROWS; row++) {
-        const tR     = row / (ROWS - 1);          /* 0=back  1=front */
-        const pScale = 0.36 + tR * 0.64;          /* perspective width scale */
-        const baseY  = gTop + tR * (gBot - gTop); /* baseline Y for this row */
+        const tR     = row / (ROWS - 1);
+        const pScale = 0.34 + tR * 0.66;
+        const baseY  = gTop + tR * (gBot - gTop);
         const amp    = maxAmp * pScale;
-        const nz     = 0.5 - tR;                  /* 0.5=back −0.5=front    */
+        const nz     = 0.5 - tR;
 
         for (let col = 0; col < COLS; col++) {
-          const tC = col / (COLS - 1);
-          const nx = tC - 0.5;                    /* −0.5 … +0.5            */
+          const nx  = col / (COLS - 1) - 0.5;
+          const h   = waveH(nx, nz, t);
+          const sx  = W * 0.5 + nx * gW * pScale;
+          const sy  = baseY - h * amp;
+          const idx = (row * COLS + col);
+          POS[idx * 2]     = sx;
+          POS[idx * 2 + 1] = sy;
+          HVAL[idx]        = h;
 
-          const h  = waveH(nx, nz, t);
-          const sx = W * 0.5 + nx * gW * pScale;
-          const sy = baseY - h * amp;
-
-          /* peaks bright, troughs dim; back rows more transparent */
-          const hN    = (h + 1) * 0.5;            /* 0–1                    */
-          const alpha = Math.min(0.90,
-            0.045 + hN * 0.64 * (0.45 + tR * 0.55)
-          );
-          const bi = Math.min(NBUCK, Math.round(alpha * NBUCK));
-          const off = bCount[bi]++ * 2;
-          if (off + 1 < buckets[bi].length) {
-            buckets[bi][off]     = sx;
-            buckets[bi][off + 1] = sy;
+          /* bucket only bright peaks as glow dots */
+          const hN    = (h + 1) * 0.5;
+          const alpha = Math.min(0.92, 0.04 + hN * 0.68 * (0.42 + tR * 0.58));
+          if (alpha > 0.28) { /* only draw dots on peaks */
+            const bi  = Math.min(NBUCK, Math.round(alpha * NBUCK));
+            const off = bCount[bi]++ * 2;
+            if (off + 1 < buckets[bi].length) {
+              buckets[bi][off]     = sx;
+              buckets[bi][off + 1] = sy;
+            }
           }
         }
       }
 
-      /* ── batch-draw each opacity level ── */
+      /* ── Phase 2: draw ridgelines (back → front) ── */
+      ctx.lineJoin = 'round';
+      for (let row = 0; row < ROWS; row++) {
+        const tR       = row / (ROWS - 1);
+        const lineA    = 0.018 + tR * 0.26;
+        const lineW    = (0.2 + tR * 1.6) * dpr;
+        ctx.beginPath();
+        ctx.strokeStyle = `rgba(255,255,255,${lineA.toFixed(3)})`;
+        ctx.lineWidth   = lineW;
+        for (let col = 0; col < COLS; col++) {
+          const base = (row * COLS + col) * 2;
+          if (col === 0) ctx.moveTo(POS[base], POS[base + 1]);
+          else           ctx.lineTo(POS[base], POS[base + 1]);
+        }
+        ctx.stroke();
+      }
+
+      /* ── Phase 3: glow dots at peaks (bucket system) ── */
       for (let b = 0; b <= NBUCK; b++) {
         if (bCount[b] === 0) continue;
-        ctx.fillStyle = `rgba(255,255,255,${(b / NBUCK).toFixed(3)})`;
+        const bAlpha = b / NBUCK;
+        const bR     = dotR * (0.5 + bAlpha * 1.6);
+        ctx.fillStyle = `rgba(255,255,255,${bAlpha.toFixed(3)})`;
         ctx.beginPath();
-        const n = bCount[b];
-        const arr = buckets[b];
+        const n = bCount[b], arr = buckets[b];
         for (let i = 0; i < n; i++) {
           const px = arr[i * 2], py = arr[i * 2 + 1];
-          ctx.moveTo(px + dotR, py);
-          ctx.arc(px, py, dotR, 0, 6.2832);
+          ctx.moveTo(px + bR, py);
+          ctx.arc(px, py, bR, 0, 6.2832);
         }
         ctx.fill();
       }
 
-      /* ── soft vignette to frame the mesh ── */
-      const vig = ctx.createRadialGradient(W*.5,H*.46,H*.06, W*.5,H*.46,W*.62);
+      /* ── vignette ── */
+      const vig = ctx.createRadialGradient(W*.5,H*.46,H*.05, W*.5,H*.46,W*.60);
       vig.addColorStop(0,   'rgba(0,0,0,0)');
-      vig.addColorStop(0.7, 'rgba(0,0,0,0)');
-      vig.addColorStop(1,   'rgba(6,7,9,0.78)');
+      vig.addColorStop(0.68,'rgba(0,0,0,0)');
+      vig.addColorStop(1,   'rgba(6,7,9,0.82)');
       ctx.fillStyle = vig;
       ctx.fillRect(0, 0, W, H);
 
-      t += 0.0075;
+      t += 0.0090;
       requestAnimationFrame(draw);
     }
 
