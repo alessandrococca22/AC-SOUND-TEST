@@ -921,6 +921,21 @@ input,select,textarea { font-family:var(--font); }
 .artist-wave { display: none; }
 .artist-wave-bars { display: none; }
 
+/* Pearl Deluxe canvas overlay on artist photo */
+.artist-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  display: block;
+}
+@media (max-width: 760px) {
+  .artist-canvas { opacity: 0.80; }
+}
+
 /* ================================================================
    SERVICES — dark editorial accordion
    ================================================================ */
@@ -1042,19 +1057,19 @@ input,select,textarea { font-family:var(--font); }
 
 /* Left accent bar removed */
 
-/* Dark gradient: left covers text, bottom is solid black so icon rises out of darkness */
+/* Dark gradient: left covers text, icon zone opens up on the right */
 .svc-bg::before {
   content: '';
   position: absolute;
   inset: 0;
   z-index: 1;
   background:
-    linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.80) 18%, rgba(0,0,0,0) 40%),
+    linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 18%, rgba(0,0,0,0) 36%),
     linear-gradient(to right,
       rgba(7,8,11,1)    0%,
-      rgba(7,8,11,1)   62%,
-      rgba(7,8,11,0.82) 72%,
-      rgba(7,8,11,0.08) 86%,
+      rgba(7,8,11,1)   54%,
+      rgba(7,8,11,0.72) 65%,
+      rgba(7,8,11,0.08) 80%,
       rgba(7,8,11,0)   100%);
 }
 
@@ -1098,7 +1113,7 @@ input,select,textarea { font-family:var(--font); }
   .svc-desc { display: none; }
   .svc-title { font-size: clamp(2.4rem, 9vw, 4.5rem); }
   .svc-bg { padding-right: 3%; }
-  .svc-bg-icon svg { max-width: 200px; height: auto; }
+  .svc-bg-icon svg { max-width: 170px; height: auto; }
 }
 @media (max-width: 560px) {
   .svc-row-trigger { grid-template-columns: 44px 1fr 28px; gap: 0.6rem; padding: 1.8rem 0; }
@@ -1106,7 +1121,7 @@ input,select,textarea { font-family:var(--font); }
   .svc-title { font-size: clamp(2rem, 12vw, 3.2rem); text-align: right; }
   .svc-bg { padding-right: 2%; }
   .svc-bg::after { display: none; }
-  .svc-bg-icon svg { max-width: 160px; height: auto; }
+  .svc-bg-icon svg { max-width: 130px; height: auto; }
   .svc-bg-icon { opacity: 0.80; }
   .icon-mic, .icon-mixer, .icon-keyboard, .icon-speaker { filter: none !important; }
 }
@@ -1114,16 +1129,20 @@ input,select,textarea { font-family:var(--font); }
 /* Parallax images */
 [data-parallax] { will-change: transform; }
 
-/* ── Shared icon float ── */
+/* ── Shared icon floats with 3D perspective ── */
 @keyframes iconFloat {
-  0%,100% { transform: translateY(0); }
-  50%     { transform: translateY(-7px); }
+  0%,100% { transform: perspective(700px) rotateX(4deg)  rotateY(-9deg)  translateY(0); }
+  50%     { transform: perspective(700px) rotateX(5.5deg) rotateY(-11deg) translateY(-9px); }
+}
+@keyframes iconFloat2 {
+  0%,100% { transform: perspective(700px) rotateX(5deg)  rotateY(8deg)  translateY(0); }
+  50%     { transform: perspective(700px) rotateX(3.5deg) rotateY(10deg) translateY(-8px); }
 }
 
 /* ── MIXER (Mixing) — SVG fader console ── */
 .icon-mixer {
   animation: iconFloat 5.4s ease-in-out infinite;
-  filter: drop-shadow(0 26px 48px rgba(0,0,0,0.98));
+  filter: drop-shadow(0 32px 56px rgba(0,0,0,0.98)) drop-shadow(0 0 40px rgba(255,255,255,0.06));
 }
 .mixer-svg { display: block; overflow: visible; }
 @keyframes fdrA { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
@@ -1150,7 +1169,7 @@ input,select,textarea { font-family:var(--font); }
 /* ── KEYBOARD (Production) ── */
 .icon-keyboard {
   animation: iconFloat 4.8s ease-in-out infinite 0.7s;
-  filter: drop-shadow(0 28px 50px rgba(0,0,0,0.98));
+  filter: drop-shadow(0 32px 54px rgba(0,0,0,0.98)) drop-shadow(0 0 36px rgba(255,255,255,0.05));
 }
 .kbd-svg-lg {
   display: block;
@@ -1189,8 +1208,8 @@ input,select,textarea { font-family:var(--font); }
 
 /* ── SPEAKER (Sound Design) — white studio monitor 3D render ── */
 .icon-speaker {
-  animation: iconFloat 5.6s ease-in-out infinite 1.2s;
-  filter: drop-shadow(0 26px 48px rgba(0,0,0,0.98)) drop-shadow(0 0 50px rgba(255,255,255,0.04));
+  animation: iconFloat2 5.6s ease-in-out infinite 1.2s;
+  filter: drop-shadow(0 32px 54px rgba(0,0,0,0.98)) drop-shadow(0 0 50px rgba(255,255,255,0.06));
 }
 .spk-svg { display:block; }
 @keyframes spkPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.015)} }
@@ -1568,7 +1587,7 @@ input,select,textarea { font-family:var(--font); }
             <div class="modal-contact-item">
               <span class="modal-contact-label">Email</span>
               <span class="modal-contact-value">
-                <a href="mailto:info@acsound.net">info@acsound.net</a>
+                <a href="mailto:alessandrococca94@gmail.com">alessandrococca94@gmail.com</a>
               </span>
             </div>
             <div class="modal-contact-item">
@@ -1780,6 +1799,7 @@ input,select,textarea { font-family:var(--font); }
     <!-- Image LEFT — AP style: product/visual dominates left side -->
     <div class="artist-media" data-anim="img">
       <img src="hf_20260307_000627_67586920-8799-4790-8fde-ee3ea65d1e05.png" alt="Artist Page" data-parallax="0.40">
+      <canvas class="artist-canvas" id="artistCanvas"></canvas>
     </div>
     <!-- Text RIGHT -->
     <div>
@@ -1789,17 +1809,9 @@ input,select,textarea { font-family:var(--font); }
       <p class="artist-body" data-anim data-delay="2">This is my portfolio of original works — where technical expertise meets creative intuition. The name <em>RVNNER</em> embodies the capability to move through genres, moods, and textures, creating something entirely new.</p>
       <p class="artist-body" data-anim data-delay="2">My expertise spans beats, remix, and original production.</p>
       <div class="artist-listen" data-anim data-delay="3">
-        <a href="https://open.spotify.com/album/2zgkWG3LRqEJHWLLeOCznQ" target="_blank" rel="noopener" class="artist-platform">
-          <svg viewBox="0 0 24 24"><path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z"/></svg>
-          Listen on Spotify
-        </a>
-        <a href="https://instagram.com/rvnnermusic" target="_blank" rel="noopener" class="artist-platform">
-          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
-          @rvnnermusic
-        </a>
-        <a href="https://samply.app/p/ye5t69pDc6RUB71GKeXc" target="_blank" rel="noopener" class="artist-platform">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
-          My Projects
+        <a href="https://rvnner.komi.io/@/mini-site/content" target="_blank" rel="noopener" class="hero-enter" style="font-size:12px;padding:14px 40px;border-radius:50px;color:rgba(255,255,255,0.80);border-color:rgba(255,255,255,0.28);text-decoration:none;display:inline-flex;align-items:center;gap:10px">
+          Find out more
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
       </div>
     </div>
@@ -1831,125 +1843,117 @@ input,select,textarea { font-family:var(--font); }
         <div class="svc-bg" aria-hidden="true">
           <div class="svc-bg-icon">
             <div class="icon-mixer">
-              <svg class="mixer-svg" viewBox="0 0 320 210" width="320" height="210" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+              <svg class="mixer-svg" viewBox="0 0 320 210" width="200" height="131" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
                 <defs>
                   <linearGradient id="mxBody" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#2a2d32"/>
-                    <stop offset="100%" stop-color="#111316"/>
+                    <stop offset="0%"   stop-color="#e6e8ea"/>
+                    <stop offset="100%" stop-color="#d0d2d5"/>
                   </linearGradient>
                   <linearGradient id="mxFader" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#f0f0f0"/>
-                    <stop offset="40%" stop-color="#ffffff"/>
+                    <stop offset="0%"   stop-color="#f0f0f0"/>
+                    <stop offset="40%"  stop-color="#ffffff"/>
                     <stop offset="100%" stop-color="#c8c8c8"/>
                   </linearGradient>
                   <linearGradient id="mxRail" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#1a1c20"/>
-                    <stop offset="100%" stop-color="#0d0e11"/>
-                  </linearGradient>
-                  <linearGradient id="mxKnob" cx="40%" cy="35%" r="55%" fx="35%" fy="30%" id="mxKnobR" gradientUnits="objectBoundingBox">
-                    <stop offset="0%" stop-color="#ffffff"/>
-                    <stop offset="60%" stop-color="#d0d0d0"/>
-                    <stop offset="100%" stop-color="#888"/>
+                    <stop offset="0%"   stop-color="#a8aaae"/>
+                    <stop offset="100%" stop-color="#909398"/>
                   </linearGradient>
                   <radialGradient id="mxKnobRG" cx="38%" cy="32%" r="55%" fx="35%" fy="28%">
-                    <stop offset="0%" stop-color="#ffffff"/>
-                    <stop offset="55%" stop-color="#d8d8d8"/>
+                    <stop offset="0%"   stop-color="#ffffff"/>
+                    <stop offset="55%"  stop-color="#d8d8d8"/>
                     <stop offset="100%" stop-color="#909090"/>
                   </radialGradient>
                   <linearGradient id="mxVuBar" x1="0" y1="0" x2="1" y2="0">
-                    <stop offset="0%" stop-color="#4eff8a"/>
-                    <stop offset="70%" stop-color="#c8ff4a"/>
-                    <stop offset="100%" stop-color="#ff4444"/>
+                    <stop offset="0%"   stop-color="rgba(255,255,255,0.92)"/>
+                    <stop offset="60%"  stop-color="rgba(220,222,226,0.85)"/>
+                    <stop offset="100%" stop-color="rgba(255,255,255,0.75)"/>
                   </linearGradient>
                 </defs>
                 <!-- chassis body -->
                 <rect x="0" y="0" width="320" height="210" rx="10" fill="url(#mxBody)"/>
-                <!-- top panel highlight -->
-                <rect x="0" y="0" width="320" height="3" rx="2" fill="rgba(255,255,255,0.10)"/>
+                <!-- top edge highlight -->
+                <rect x="0" y="0" width="320" height="3"   rx="2"  fill="rgba(255,255,255,0.65)"/>
+                <!-- left edge highlight -->
+                <rect x="0" y="0" width="3"   height="210" rx="2"  fill="rgba(255,255,255,0.40)"/>
+                <!-- right edge shadow -->
+                <rect x="314" y="0" width="6" height="210" rx="2"  fill="rgba(0,0,0,0.08)"/>
                 <!-- master section right -->
-                <rect x="272" y="8" width="42" height="194" rx="6" fill="rgba(0,0,0,0.30)"/>
-                <!-- VU meter bar -->
-                <rect x="278" y="14" width="30" height="8" rx="2" fill="#0d0e11"/>
+                <rect x="272" y="8" width="42" height="194" rx="6" fill="rgba(0,0,0,0.06)"/>
+                <!-- VU meter track + bar -->
+                <rect x="278" y="14" width="30" height="8" rx="2" fill="rgba(0,0,0,0.12)"/>
                 <rect class="mx-vu" x="278" y="14" width="30" height="8" rx="2" fill="url(#mxVuBar)"/>
-                <rect x="278" y="24" width="30" height="8" rx="2" fill="#0d0e11"/>
+                <rect x="278" y="24" width="30" height="8" rx="2" fill="rgba(0,0,0,0.12)"/>
                 <rect class="mx-vu" x="278" y="24" width="22" height="8" rx="2" fill="url(#mxVuBar)" style="animation-delay:0.3s"/>
                 <!-- master knob -->
-                <circle cx="293" cy="62" r="16" fill="#1a1c22" stroke="rgba(255,255,255,0.10)" stroke-width="1.5"/>
+                <circle cx="293" cy="62" r="16" fill="rgba(180,182,186,0.45)" stroke="rgba(255,255,255,0.55)" stroke-width="1.5"/>
                 <circle cx="293" cy="62" r="12" fill="url(#mxKnobRG)"/>
-                <rect x="292" y="50" width="2" height="5" rx="1" fill="#333"/>
+                <rect x="292" y="50" width="2" height="5" rx="1" fill="rgba(80,80,85,0.65)"/>
                 <!-- master fader rail -->
                 <rect x="289" y="88" width="8" height="90" rx="4" fill="url(#mxRail)"/>
                 <g class="fc8">
                   <rect x="282" y="128" width="22" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="282" y="134" width="22" height="2" rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="282" y="134" width="22" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
                 <!-- 8 channel fader columns -->
-                <!-- col 1 -->
                 <rect x="10"  y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc1">
                   <rect x="3"   y="88"  width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="3"   y="94"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="3"   y="94"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="13"  cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="13"  cy="28"  r="5" fill="url(#mxKnobRG)"/>
-                <!-- col 2 -->
+                <circle cx="13"  cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="13"  cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <rect x="44"  y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc2">
                   <rect x="37"  y="72"  width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="37"  y="78"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="37"  y="78"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="47"  cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="47"  cy="28"  r="5" fill="url(#mxKnobRG)"/>
-                <!-- col 3 -->
+                <circle cx="47"  cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="47"  cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <rect x="78"  y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc3">
                   <rect x="71"  y="100" width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="71"  y="106" width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="71"  y="106" width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="81"  cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="81"  cy="28"  r="5" fill="url(#mxKnobRG)"/>
-                <!-- col 4 -->
+                <circle cx="81"  cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="81"  cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <rect x="112" y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc4">
                   <rect x="105" y="80"  width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="105" y="86"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="105" y="86"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="115" cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="115" cy="28"  r="5" fill="url(#mxKnobRG)"/>
-                <!-- col 5 -->
+                <circle cx="115" cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="115" cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <rect x="146" y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc5">
                   <rect x="139" y="60"  width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="139" y="66"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="139" y="66"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="149" cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="149" cy="28"  r="5" fill="url(#mxKnobRG)"/>
-                <!-- col 6 -->
+                <circle cx="149" cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="149" cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <rect x="180" y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc6">
                   <rect x="173" y="110" width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="173" y="116" width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="173" y="116" width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="183" cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="183" cy="28"  r="5" fill="url(#mxKnobRG)"/>
-                <!-- col 7 -->
+                <circle cx="183" cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="183" cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <rect x="214" y="40" width="6" height="130" rx="3" fill="url(#mxRail)"/>
                 <g class="fc7">
                   <rect x="207" y="90"  width="20" height="14" rx="3" fill="url(#mxFader)"/>
-                  <rect x="207" y="96"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.18)"/>
+                  <rect x="207" y="96"  width="20" height="2"  rx="1" fill="rgba(0,0,0,0.14)"/>
                 </g>
-                <circle cx="217" cy="28"  r="7" fill="#1a1c22" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
-                <circle cx="217" cy="28"  r="5" fill="url(#mxKnobRG)"/>
+                <circle cx="217" cy="28" r="7" fill="rgba(180,182,186,0.40)" stroke="rgba(255,255,255,0.50)" stroke-width="1"/>
+                <circle cx="217" cy="28" r="5" fill="url(#mxKnobRG)"/>
                 <!-- bottom strip -->
-                <rect x="0" y="182" width="320" height="28" rx="0" fill="rgba(0,0,0,0.28)"/>
-                <!-- channel LEDs -->
-                <circle class="mx-led" cx="13"  cy="196" r="3" fill="#4eff8a"/>
-                <circle class="mx-led" cx="47"  cy="196" r="3" fill="#4eff8a" style="animation-delay:0.4s"/>
-                <circle                cx="81"  cy="196" r="3" fill="#ff4444" opacity="0.7"/>
-                <circle class="mx-led" cx="115" cy="196" r="3" fill="#4eff8a" style="animation-delay:0.8s"/>
-                <circle class="mx-led" cx="149" cy="196" r="3" fill="#4eff8a" style="animation-delay:0.2s"/>
-                <circle                cx="183" cy="196" r="3" fill="#ffcc00" opacity="0.8"/>
-                <circle class="mx-led" cx="217" cy="196" r="3" fill="#4eff8a" style="animation-delay:1.1s"/>
+                <rect x="0" y="182" width="320" height="28" fill="rgba(0,0,0,0.06)"/>
+                <!-- channel LEDs — all white -->
+                <circle class="mx-led" cx="13"  cy="196" r="3" fill="#ffffff"/>
+                <circle class="mx-led" cx="47"  cy="196" r="3" fill="#ffffff" style="animation-delay:0.4s"/>
+                <circle                cx="81"  cy="196" r="3" fill="rgba(255,255,255,0.50)"/>
+                <circle class="mx-led" cx="115" cy="196" r="3" fill="#ffffff" style="animation-delay:0.8s"/>
+                <circle class="mx-led" cx="149" cy="196" r="3" fill="#ffffff" style="animation-delay:0.2s"/>
+                <circle                cx="183" cy="196" r="3" fill="rgba(255,255,255,0.70)"/>
+                <circle class="mx-led" cx="217" cy="196" r="3" fill="#ffffff" style="animation-delay:1.1s"/>
                 <circle class="mx-led" cx="293" cy="196" r="3" fill="#ffffff" style="animation-delay:0.6s"/>
               </svg>
             </div>
@@ -1970,11 +1974,11 @@ input,select,textarea { font-family:var(--font); }
         <div class="svc-bg" aria-hidden="true">
           <div class="svc-bg-icon">
             <div class="icon-keyboard">
-              <svg class="kbd-svg-lg" viewBox="0 0 300 130" width="300" height="130" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+              <svg class="kbd-svg-lg" viewBox="0 0 300 130" width="220" height="95" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
                 <defs>
                   <linearGradient id="kbdBody" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stop-color="#252830"/>
-                    <stop offset="100%" stop-color="#0e0f13"/>
+                    <stop offset="0%"   stop-color="#e4e6e8"/>
+                    <stop offset="100%" stop-color="#d0d2d5"/>
                   </linearGradient>
                   <linearGradient id="kbdKey" x1="0" y1="0" x2="0" y2="1">
                     <stop offset="0%" stop-color="#ffffff"/>
@@ -1997,13 +2001,15 @@ input,select,textarea { font-family:var(--font); }
                 <!-- Body shell -->
                 <rect x="0" y="0" width="300" height="130" rx="8" fill="url(#kbdBody)"/>
                 <!-- Top edge highlight -->
-                <rect x="0" y="0" width="300" height="2.5" rx="2" fill="rgba(255,255,255,0.12)"/>
+                <rect x="0" y="0" width="300" height="2.5" rx="2" fill="rgba(255,255,255,0.65)"/>
+                <!-- Left edge highlight -->
+                <rect x="0" y="0" width="3" height="130" rx="2" fill="rgba(255,255,255,0.40)"/>
                 <!-- Pitch/mod wheels left -->
-                <rect x="6" y="18" width="14" height="92" rx="6" fill="rgba(0,0,0,0.40)"/>
-                <rect x="8" y="52" width="10" height="22" rx="4" fill="rgba(255,255,255,0.20)"/>
-                <rect x="6" y="18" width="14" height="92" rx="6" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
-                <rect x="24" y="18" width="14" height="92" rx="6" fill="rgba(0,0,0,0.40)"/>
-                <rect x="26" y="64" width="10" height="22" rx="4" fill="rgba(255,255,255,0.12)"/>
+                <rect x="6" y="18" width="14" height="92" rx="6" fill="rgba(0,0,0,0.10)"/>
+                <rect x="8" y="52" width="10" height="22" rx="4" fill="rgba(255,255,255,0.50)"/>
+                <rect x="6" y="18" width="14" height="92" rx="6" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="1"/>
+                <rect x="24" y="18" width="14" height="92" rx="6" fill="rgba(0,0,0,0.10)"/>
+                <rect x="26" y="64" width="10" height="22" rx="4" fill="rgba(255,255,255,0.40)"/>
                 <!-- Keys area -->
                 <!-- 10 white keys, x starts at 43 -->
                 <rect class="kp1" x="43"  y="14" width="24" height="104" rx="3" fill="url(#kbdKey)"/>
@@ -2017,15 +2023,15 @@ input,select,textarea { font-family:var(--font); }
                 <rect             x="251" y="14" width="24" height="104" rx="3" fill="url(#kbdKey)"/>
                 <rect             x="277" y="14" width="21" height="104" rx="3" fill="url(#kbdKey)"/>
                 <!-- Key gap shadows (between keys) -->
-                <rect x="67"  y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="93"  y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="119" y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="145" y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="171" y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="197" y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="223" y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="249" y="14" width="2" height="104" fill="#0e0f13"/>
-                <rect x="275" y="14" width="2" height="104" fill="#0e0f13"/>
+                <rect x="67"  y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="93"  y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="119" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="145" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="171" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="197" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="223" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="249" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
+                <rect x="275" y="14" width="2" height="104" fill="rgba(0,0,0,0.18)"/>
                 <!-- Key bottom edge depth -->
                 <rect x="43"  y="112" width="24" height="6" rx="2" fill="rgba(0,0,0,0.22)"/>
                 <rect x="69"  y="112" width="24" height="6" rx="2" fill="rgba(0,0,0,0.22)"/>
@@ -2073,115 +2079,80 @@ input,select,textarea { font-family:var(--font); }
             <div class="icon-mic">
               <div class="mic-wrap">
                 <div class="mic-ring"></div><div class="mic-ring"></div><div class="mic-ring"></div>
-                <svg class="mic-svg" viewBox="0 0 130 230" width="104" height="184" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
+                <svg class="mic-svg" viewBox="0 0 130 210" width="120" height="194" xmlns="http://www.w3.org/2000/svg" style="overflow:visible">
                   <defs>
-                    <!-- capsule body cylinder gradient (bright left, dark right) -->
-                    <linearGradient id="mgCap" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%"   stop-color="#e8e8e8"/>
-                      <stop offset="28%"  stop-color="#ffffff"/>
-                      <stop offset="62%"  stop-color="#e0e0e0"/>
-                      <stop offset="100%" stop-color="#9a9a9a"/>
+                    <linearGradient id="micLat" x1="0" y1="0" x2="1" y2="0">
+                      <stop offset="0%"   stop-color="#d2d2d2"/>
+                      <stop offset="22%"  stop-color="#ffffff"/>
+                      <stop offset="58%"  stop-color="#e0e0e0"/>
+                      <stop offset="100%" stop-color="#848484"/>
                     </linearGradient>
-                    <!-- body below capsule -->
-                    <linearGradient id="mgBody" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%"   stop-color="#d8d8d8"/>
-                      <stop offset="30%"  stop-color="#f5f5f5"/>
-                      <stop offset="65%"  stop-color="#dcdcdc"/>
+                    <radialGradient id="micCap" cx="36%" cy="24%" r="62%">
+                      <stop offset="0%"   stop-color="#ffffff"/>
+                      <stop offset="55%"  stop-color="#eeeeee"/>
+                      <stop offset="100%" stop-color="#a4a4a4"/>
+                    </radialGradient>
+                    <radialGradient id="micKnob" cx="35%" cy="29%" r="60%">
+                      <stop offset="0%"   stop-color="#ffffff"/>
+                      <stop offset="48%"  stop-color="#d8d8d8"/>
                       <stop offset="100%" stop-color="#888888"/>
-                    </linearGradient>
-                    <!-- top dome highlight -->
-                    <radialGradient id="mgDome" cx="38%" cy="30%" r="55%">
-                      <stop offset="0%"   stop-color="#ffffff"/>
-                      <stop offset="60%"  stop-color="#e8e8e8"/>
-                      <stop offset="100%" stop-color="#b0b0b0"/>
                     </radialGradient>
-                    <!-- knob radial -->
-                    <radialGradient id="mgKnob" cx="36%" cy="30%" r="58%">
-                      <stop offset="0%"   stop-color="#ffffff"/>
-                      <stop offset="50%"  stop-color="#d8d8d8"/>
-                      <stop offset="100%" stop-color="#8a8a8a"/>
+                    <linearGradient id="micBase" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%"   stop-color="#e2e2e2"/>
+                      <stop offset="40%"  stop-color="#ffffff"/>
+                      <stop offset="100%" stop-color="#acacac"/>
+                    </linearGradient>
+                    <radialGradient id="micSh" cx="76%" cy="50%" r="52%">
+                      <stop offset="0%"   stop-color="rgba(0,0,0,0.26)"/>
+                      <stop offset="100%" stop-color="rgba(0,0,0,0)"/>
                     </radialGradient>
-                    <!-- base gradient -->
-                    <linearGradient id="mgBase" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%"   stop-color="#e0e0e0"/>
-                      <stop offset="50%"  stop-color="#ffffff"/>
-                      <stop offset="100%" stop-color="#b8b8b8"/>
-                    </linearGradient>
-                    <!-- yoke gradient -->
-                    <linearGradient id="mgYoke" x1="0" y1="0" x2="1" y2="0">
-                      <stop offset="0%"   stop-color="#d0d0d0"/>
-                      <stop offset="45%"  stop-color="#f8f8f8"/>
-                      <stop offset="100%" stop-color="#a0a0a0"/>
-                    </linearGradient>
-                    <!-- mesh pattern -->
-                    <pattern id="mgMesh" x="0" y="0" width="6" height="6" patternUnits="userSpaceOnUse">
-                      <rect width="6" height="6" fill="rgba(0,0,0,0.12)"/>
-                      <rect x="1" y="1" width="4" height="4" rx="0.8" fill="rgba(0,0,0,0.22)"/>
+                    <pattern id="micMesh" x="0" y="0" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45 65 50)">
+                      <rect width="7" height="7" fill="rgba(0,0,0,0.10)"/>
+                      <rect x="1.2" y="1.2" width="4.6" height="4.6" rx="0.8" fill="rgba(0,0,0,0.22)"/>
                     </pattern>
-                    <clipPath id="mgCapClip">
-                      <rect x="28" y="8" width="74" height="92" rx="37"/>
+                    <clipPath id="micClip">
+                      <rect x="38" y="6" width="54" height="88" rx="27"/>
                     </clipPath>
                   </defs>
 
                   <!-- === CAPSULE === -->
-                  <!-- capsule body -->
-                  <rect x="28" y="8" width="74" height="92" rx="37" fill="url(#mgCap)"/>
-                  <!-- dome top highlight -->
-                  <ellipse cx="65" cy="12" rx="28" ry="10" fill="url(#mgDome)" opacity="0.7"/>
-                  <!-- mesh grille clipped to capsule shape -->
-                  <rect x="28" y="24" width="74" height="62" clip-path="url(#mgCapClip)" fill="url(#mgMesh)" opacity="0.85"/>
-                  <!-- grille recess border -->
-                  <rect x="32" y="24" width="66" height="62" rx="6" fill="none" stroke="rgba(0,0,0,0.18)" stroke-width="1.2"/>
-                  <!-- left edge highlight strip -->
-                  <rect x="28" y="14" width="10" height="56" rx="5" fill="rgba(255,255,255,0.35)"/>
-                  <!-- seam line at top of capsule -->
-                  <rect x="40" y="8" width="50" height="2" rx="1" fill="rgba(0,0,0,0.15)"/>
-                  <!-- right-side shadow overlay -->
-                  <rect x="82" y="8" width="20" height="92" rx="0" fill="rgba(0,0,0,0.12)" style="border-radius:0 37px 37px 0"/>
+                  <rect x="38" y="6" width="54" height="88" rx="27" fill="url(#micCap)"/>
+                  <rect x="38" y="22" width="54" height="62" clip-path="url(#micClip)" fill="url(#micMesh)" opacity="0.88"/>
+                  <rect x="42" y="22" width="46" height="62" rx="4" fill="none" stroke="rgba(0,0,0,0.14)" stroke-width="1"/>
+                  <rect x="38" y="12" width="9" height="55" rx="4" fill="rgba(255,255,255,0.30)"/>
+                  <rect x="79" y="6" width="13" height="88" fill="rgba(0,0,0,0.12)" style="border-radius:0 27px 27px 0"/>
+                  <ellipse cx="65" cy="10" rx="22" ry="7" fill="rgba(255,255,255,0.48)"/>
 
                   <!-- === COLLAR RING === -->
-                  <rect x="32" y="98" width="66" height="8" rx="3" fill="url(#mgBody)"/>
-                  <rect x="32" y="98" width="66" height="2" rx="1" fill="rgba(255,255,255,0.40)"/>
+                  <rect x="40" y="92" width="50" height="8" rx="4" fill="url(#micLat)"/>
+                  <rect x="40" y="92" width="50" height="2" rx="1" fill="rgba(255,255,255,0.42)"/>
 
                   <!-- === BODY === -->
-                  <rect x="36" y="106" width="58" height="64" rx="5" fill="url(#mgBody)"/>
-                  <!-- body left highlight -->
-                  <rect x="36" y="106" width="9" height="64" rx="3" fill="rgba(255,255,255,0.20)"/>
-                  <!-- mute button slot -->
-                  <rect x="48" y="115" width="34" height="10" rx="4" fill="rgba(0,0,0,0.28)"/>
-                  <rect x="52" y="117" width="14" height="6"  rx="3" fill="rgba(255,255,255,0.70)"/>
-                  <!-- gain knob -->
-                  <circle cx="65" cy="148" r="16" fill="rgba(0,0,0,0.22)" stroke="rgba(255,255,255,0.14)" stroke-width="1.5"/>
-                  <circle cx="65" cy="148" r="13" fill="url(#mgKnob)"/>
-                  <!-- knob indicator tick -->
-                  <rect x="64" y="136" width="2" height="5" rx="1" fill="rgba(60,60,60,0.80)"/>
-                  <!-- knob ribbing marks -->
-                  <circle cx="65" cy="148" r="13" fill="none" stroke="rgba(0,0,0,0.10)" stroke-width="1" stroke-dasharray="2 3.14"/>
+                  <rect x="46" y="100" width="38" height="68" rx="6" fill="url(#micLat)"/>
+                  <rect x="67" y="100" width="17" height="68" fill="url(#micSh)" style="border-radius:0 6px 6px 0"/>
+                  <rect x="46" y="100" width="7" height="68" rx="3" fill="rgba(255,255,255,0.16)"/>
+                  <rect x="51" y="110" width="28" height="9" rx="4.5" fill="rgba(0,0,0,0.26)"/>
+                  <rect x="55" y="112" width="11" height="5" rx="2.5" fill="rgba(255,255,255,0.70)"/>
+                  <circle cx="65" cy="150" r="16" fill="rgba(0,0,0,0.20)" stroke="rgba(255,255,255,0.12)" stroke-width="1.5"/>
+                  <circle cx="65" cy="150" r="13" fill="url(#micKnob)"/>
+                  <rect x="64" y="138" width="2" height="5" rx="1" fill="rgba(50,50,50,0.78)"/>
 
-                  <!-- === YOKE ARMS === -->
-                  <!-- left arm -->
-                  <path d="M38,120 L22,122 Q10,126 10,148 Q10,162 24,168 L36,170" fill="none" stroke="url(#mgYoke)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M38,120 L22,122 Q10,126 10,148 Q10,162 24,168 L36,170" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                  <!-- right arm -->
-                  <path d="M92,120 L108,122 Q120,126 120,148 Q120,162 106,168 L94,170" fill="none" stroke="url(#mgYoke)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
-                  <path d="M92,120 L108,122 Q120,126 120,148 Q120,162 106,168 L94,170" fill="none" stroke="rgba(255,255,255,0.12)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
-                  <!-- pivot discs -->
-                  <circle cx="38" cy="120" r="6" fill="url(#mgBody)"/>
-                  <circle cx="38" cy="120" r="3.5" fill="rgba(0,0,0,0.30)"/>
-                  <circle cx="92" cy="120" r="6" fill="url(#mgBody)"/>
-                  <circle cx="92" cy="120" r="3.5" fill="rgba(0,0,0,0.30)"/>
+                  <!-- === YOKE ARMS (rectangular U-shape) === -->
+                  <path d="M 46,122 L 18,122 L 18,178" fill="none" stroke="url(#micLat)" stroke-width="9" stroke-linecap="round" stroke-linejoin="miter"/>
+                  <path d="M 46,122 L 18,122 L 18,178" fill="none" stroke="rgba(255,255,255,0.22)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="miter"/>
+                  <path d="M 84,122 L 112,122 L 112,178" fill="none" stroke="url(#micLat)" stroke-width="9" stroke-linecap="round" stroke-linejoin="miter"/>
+                  <path d="M 84,122 L 112,122 L 112,178" fill="none" stroke="rgba(255,255,255,0.13)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="miter"/>
+                  <circle cx="46" cy="122" r="6" fill="url(#micLat)"/>
+                  <circle cx="46" cy="122" r="3.5" fill="rgba(0,0,0,0.28)"/>
+                  <circle cx="84" cy="122" r="6" fill="url(#micLat)"/>
+                  <circle cx="84" cy="122" r="3.5" fill="rgba(0,0,0,0.28)"/>
 
-                  <!-- === STEM CONNECTOR === -->
-                  <rect x="54" y="170" width="22" height="16" rx="6" fill="url(#mgBody)"/>
-                  <rect x="56" y="170" width="5"  height="16" rx="3" fill="rgba(255,255,255,0.22)"/>
-
-                  <!-- === BASE PLATFORM === -->
-                  <rect x="22" y="185" width="86" height="14" rx="7" fill="url(#mgBase)"/>
-                  <rect x="22" y="185" width="86" height="4"  rx="3" fill="rgba(255,255,255,0.35)"/>
-                  <rect x="22" y="193" width="86" height="6"  rx="3" fill="rgba(0,0,0,0.12)"/>
-                  <!-- base bottom edge -->
-                  <rect x="18" y="197" width="94" height="6" rx="7" fill="url(#mgBody)"/>
-                  <rect x="18" y="199" width="94" height="2" rx="1" fill="rgba(255,255,255,0.25)"/>
+                  <!-- === BASE PLATFORM (wide and flat) === -->
+                  <rect x="10" y="176" width="110" height="22" rx="6" fill="url(#micBase)"/>
+                  <rect x="10" y="176" width="110" height="5" rx="3" fill="rgba(255,255,255,0.34)"/>
+                  <rect x="10" y="190" width="110" height="8" rx="4" fill="rgba(0,0,0,0.10)"/>
+                  <rect x="6" y="196" width="118" height="12" rx="6" fill="url(#micLat)"/>
+                  <rect x="6" y="197" width="118" height="3" rx="2" fill="rgba(255,255,255,0.26)"/>
                 </svg>
               </div>
             </div>
@@ -2272,8 +2243,8 @@ input,select,textarea { font-family:var(--font); }
                 <rect x="30" y="188" width="120" height="3"  rx="2" fill="rgba(255,255,255,0.08)"/>
 
                 <!-- Status LED -->
-                <circle class="spk-led" cx="152" cy="28" r="4" fill="#4eff8a"/>
-                <circle cx="152" cy="28" r="6" fill="rgba(78,255,138,0.15)"/>
+                <circle class="spk-led" cx="152" cy="28" r="4" fill="#ffffff"/>
+                <circle cx="152" cy="28" r="6" fill="rgba(255,255,255,0.15)"/>
 
                 <!-- Brand badge -->
                 <rect x="62" y="197" width="56" height="10" rx="4" fill="rgba(255,255,255,0.12)"/>
@@ -2583,23 +2554,14 @@ input,select,textarea { font-family:var(--font); }
   }
 
   /* ================================================================
-     PARTICLE MESH — 3D wave surface (Joy Division ridgeline + dots)
+     RADIAL SOUNDWAVE — glowing speaker-wave animation (manifesto)
      ================================================================ */
   (function () {
     const canvas = document.getElementById('soundwaveCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let W = 0, H = 0, visible = true;
-    const dpr   = Math.min(window.devicePixelRatio || 1, 2);
-    const COLS  = 120;   /* horizontal samples per row   */
-    const ROWS  = 56;    /* depth rows, back → front     */
-    const NBUCK = 28;    /* dot opacity buckets          */
-
-    /* pre-allocated flat arrays — no GC per frame */
-    const POS     = new Float32Array(COLS * ROWS * 2);    /* all (sx,sy) pairs       */
-    const HVAL    = new Float32Array(COLS * ROWS);         /* raw wave height per dot */
-    const buckets = Array.from({ length: NBUCK + 1 }, () => new Float32Array(COLS * 4));
-    const bCount  = new Int32Array(NBUCK + 1);
+    let W = 0, H = 0, visible = true, t = 0;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     function resize() {
       const r = canvas.getBoundingClientRect();
@@ -2607,115 +2569,166 @@ input,select,textarea { font-family:var(--font); }
       H = canvas.height = Math.round(r.height * dpr);
     }
 
-    function waveH(nx, nz, t) {
-      const envX = Math.pow(Math.max(0, 1 - Math.abs(nx) * 2.0), 0.58);
-      const h =
-        Math.sin(nx * Math.PI *  5.4 + t * 0.88)                        * 0.48 +
-        Math.sin(nx * Math.PI *  2.9 - t * 0.52)                        * 0.26 +
-        Math.sin((nx * 2.6 + nz * 3.9) * Math.PI + t * 0.65)           * 0.15 +
-        Math.sin(nx * Math.PI *  9.8 + t * 1.38 + nz * Math.PI * 2)    * 0.07 +
-        Math.sin(nz * Math.PI *  2.2 + t * 0.34)                        * 0.04 +
-        Math.sin((nx * 1.8 - nz * 2.4) * Math.PI - t * 0.46)           * 0.09 +
-        Math.sin(nx * Math.PI * 14.5 + t * 2.20 + nz * Math.PI * 1.3)  * 0.028 +
-        Math.sin(nx * Math.PI *  7.1 + t * 1.05 - nz * Math.PI * 0.8)  * 0.06;
-      return h * envX;
-    }
-
-    let t = 0;
+    const SPREAD = 1.45;   /* ≈ 83° half-angle — wider arc spread */
+    const NWAVES = 7;
 
     function draw() {
       if (!visible) { requestAnimationFrame(draw); return; }
       ctx.clearRect(0, 0, W, H);
 
-      const isMob  = (W / dpr) < 600;
-      const rowsEff = isMob ? 32 : ROWS;
-      const colsEff = isMob ? 72 : COLS;
-      const gTop   = H * (isMob ? 0.08 : 0.14);
-      const gBot   = H * (isMob ? 0.82 : 0.76);
-      const gW     = W * (isMob ? 0.98 : 0.88);
-      const maxAmp = H * (isMob ? 0.22 : 0.275);
-      const dotR   = 0.95 * dpr;
+      const isMob  = (W / dpr) < 560;
+      const cx     = W * 0.5;
+      const cy     = H * 0.5;
+      const minDim = Math.min(W, H);
+      const innerR = minDim * 0.16;
+      const maxR   = Math.max(minDim * 0.88, W * 0.46);
+      const nW     = isMob ? 4 : NWAVES;
 
-      /* ── Phase 1: compute all positions + bucket dots ── */
-      bCount.fill(0);
-      for (let row = 0; row < rowsEff; row++) {
-        const tR     = row / (rowsEff - 1);
-        const pScale = 0.34 + tR * 0.66;
-        const baseY  = gTop + tR * (gBot - gTop);
-        const amp    = maxAmp * pScale;
-        const nz     = 0.5 - tR;
+      /* Traveling wave arcs — left and right sides only */
+      for (let i = 0; i < nW; i++) {
+        const tLocal = ((t * 0.40 + i / nW) % 1);
+        const r      = innerR + (maxR - innerR) * tLocal;
+        const alpha  = Math.pow(1 - tLocal, 1.8) * 0.88;
 
-        for (let col = 0; col < colsEff; col++) {
-          const nx  = col / (colsEff - 1) - 0.5;
-          const h   = waveH(nx, nz, t);
-          const sx  = W * 0.5 + nx * gW * pScale;
-          const sy  = baseY - h * amp;
-          const idx = (row * COLS + col);
-          POS[idx * 2]     = sx;
-          POS[idx * 2 + 1] = sy;
-          HVAL[idx]        = h;
+        const passes = isMob
+          ? [{ lw: 12 * dpr, a: alpha * 0.09 }, { lw: 2 * dpr, a: alpha * 0.80 }]
+          : [{ lw: 18 * dpr, a: alpha * 0.08 }, { lw: 7 * dpr, a: alpha * 0.26 }, { lw: 2 * dpr, a: alpha * 0.88 }];
 
-          /* bucket only bright peaks as glow dots */
-          const hN    = (h + 1) * 0.5;
-          const alpha = Math.min(0.92, 0.04 + hN * 0.68 * (0.42 + tR * 0.58));
-          if (alpha > 0.28) { /* only draw dots on peaks */
-            const bi  = Math.min(NBUCK, Math.round(alpha * NBUCK));
-            const off = bCount[bi]++ * 2;
-            if (off + 1 < buckets[bi].length) {
-              buckets[bi][off]     = sx;
-              buckets[bi][off + 1] = sy;
-            }
-          }
-        }
+        passes.forEach(({ lw, a }) => {
+          ctx.lineWidth   = lw;
+          ctx.lineCap     = 'round';
+          ctx.strokeStyle = `rgba(255,255,255,${a.toFixed(3)})`;
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, -SPREAD, SPREAD, false);
+          ctx.stroke();
+          ctx.beginPath();
+          ctx.arc(cx, cy, r, Math.PI - SPREAD, Math.PI + SPREAD, false);
+          ctx.stroke();
+        });
       }
 
-      /* ── Phase 2: draw ridgelines (back → front) ── */
-      ctx.lineJoin = 'round';
-      for (let row = 0; row < rowsEff; row++) {
-        const tR       = row / (rowsEff - 1);
-        const lineA    = 0.018 + tR * 0.26;
-        const lineW    = (0.2 + tR * 1.6) * dpr;
+      /* Central glowing ring */
+      [
+        { lw: 22 * dpr, a: 0.05 },
+        { lw:  9 * dpr, a: 0.20 },
+        { lw:  2 * dpr, a: 0.90 },
+      ].forEach(({ lw, a }) => {
         ctx.beginPath();
-        ctx.strokeStyle = `rgba(255,255,255,${lineA.toFixed(3)})`;
-        ctx.lineWidth   = lineW;
-        for (let col = 0; col < colsEff; col++) {
-          const base = (row * COLS + col) * 2;
-          if (col === 0) ctx.moveTo(POS[base], POS[base + 1]);
-          else           ctx.lineTo(POS[base], POS[base + 1]);
-        }
+        ctx.arc(cx, cy, innerR, 0, Math.PI * 2);
+        ctx.strokeStyle = `rgba(255,255,255,${a})`;
+        ctx.lineWidth   = lw;
         ctx.stroke();
-      }
+      });
 
-      /* ── Phase 3: glow dots at peaks (bucket system) ── */
-      for (let b = 0; b <= NBUCK; b++) {
-        if (bCount[b] === 0) continue;
-        const bAlpha = b / NBUCK;
-        const bR     = dotR * (0.5 + bAlpha * 1.6);
-        ctx.fillStyle = `rgba(255,255,255,${bAlpha.toFixed(3)})`;
-        ctx.beginPath();
-        const n = bCount[b], arr = buckets[b];
-        for (let i = 0; i < n; i++) {
-          const px = arr[i * 2], py = arr[i * 2 + 1];
-          ctx.moveTo(px + bR, py);
-          ctx.arc(px, py, bR, 0, 6.2832);
-        }
-        ctx.fill();
-      }
-
-      /* ── vignette ── */
-      const vig = ctx.createRadialGradient(W*.5,H*.46,H*.05, W*.5,H*.46,W*.60);
-      vig.addColorStop(0,   'rgba(0,0,0,0)');
-      vig.addColorStop(0.68,'rgba(0,0,0,0)');
-      vig.addColorStop(1,   'rgba(6,7,9,0.82)');
+      /* Radial vignette at edges */
+      const vig = ctx.createRadialGradient(cx, cy, minDim * 0.12, cx, cy, W * 0.60);
+      vig.addColorStop(0,    'rgba(0,0,0,0)');
+      vig.addColorStop(0.52, 'rgba(0,0,0,0)');
+      vig.addColorStop(1,    'rgba(6,7,9,0.82)');
       ctx.fillStyle = vig;
       ctx.fillRect(0, 0, W, H);
 
-      t += 0.0090;
+      t += 0.012;
       requestAnimationFrame(draw);
     }
 
-    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 })
-      .observe(canvas);
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
+    resize();
+    draw();
+  })();
+
+  /* ================================================================
+     PEARL DELUXE — iridescent ribbon overlay on artist photo
+     ================================================================ */
+  (function () {
+    const canvas = document.getElementById('artistCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    let W = 0, H = 0, visible = true;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+    function resize() {
+      const r = canvas.getBoundingClientRect();
+      W = canvas.width  = Math.round(r.width  * dpr);
+      H = canvas.height = Math.round(r.height * dpr);
+    }
+
+    function wd(nx, freq, ph, t, spd) {
+      const fade = Math.min(1, Math.min(nx, 1 - nx) * 6.5);
+      return (
+        Math.sin(nx * Math.PI * freq       + t * spd + ph)               * 0.52 +
+        Math.sin(nx * Math.PI * freq * 1.9 + t * spd * 0.72 + ph * 1.3) * 0.30 +
+        Math.sin(nx * Math.PI * freq * 3.4 + t * spd * 0.42 + ph * 0.7) * 0.18
+      ) * fade;
+    }
+
+    /* Slightly different phases/colours from manifesto for variety */
+    const RBA = [
+      { yR: 0.10, hR: 0.28, freq: 1.6, ph: 0.4, spd: 0.62, hue: 300, a: 0.58 },
+      { yR: 0.30, hR: 0.32, freq: 1.3, ph: 2.2, spd: 0.47, hue: 250, a: 0.54 },
+      { yR: 0.52, hR: 0.34, freq: 1.9, ph: 1.1, spd: 0.70, hue: 180, a: 0.56 },
+      { yR: 0.74, hR: 0.28, freq: 1.5, ph: 3.5, spd: 0.56, hue: 338, a: 0.52 },
+    ];
+
+    function drawRibbon(r, S, t) {
+      const yC = H * r.yR, hH = H * r.hR * 0.5;
+      const pts = new Float32Array((S + 1) * 2);
+      for (let i = 0; i <= S; i++) {
+        const nx = i / S;
+        pts[i * 2]     = W * nx;
+        pts[i * 2 + 1] = yC + wd(nx, r.freq, r.ph, t, r.spd) * hH;
+      }
+      const h1 = (r.hue + t * 10)     % 360 | 0;
+      const h2 = (r.hue + 55 + t * 7) % 360 | 0;
+      const h3 = (r.hue - 35 + t * 13)% 360 | 0;
+
+      const g = ctx.createLinearGradient(0, 0, W, 0);
+      g.addColorStop(0,    `hsla(${h1},74%,82%,${r.a})`);
+      g.addColorStop(0.35, `hsla(${h2},82%,88%,${r.a})`);
+      g.addColorStop(0.65, `hsla(${h3},78%,85%,${r.a})`);
+      g.addColorStop(1,    `hsla(${h1},74%,82%,${r.a})`);
+      ctx.beginPath();
+      for (let i = 0; i <= S; i++) {
+        const x = pts[i*2], y = pts[i*2+1] - hH;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      for (let i = S; i >= 0; i--) ctx.lineTo(pts[i*2], pts[i*2+1] + hH);
+      ctx.closePath();
+      ctx.fillStyle = g;
+      ctx.fill();
+
+      const hi = ctx.createLinearGradient(0, 0, W, 0);
+      hi.addColorStop(0,    `hsla(${h2},96%,99%,0)`);
+      hi.addColorStop(0.15, `hsla(${h2},96%,99%,${r.a * 0.78})`);
+      hi.addColorStop(0.50, `hsla(${h1},99%,99%,${r.a * 0.92})`);
+      hi.addColorStop(0.85, `hsla(${h3},96%,99%,${r.a * 0.78})`);
+      hi.addColorStop(1,    `hsla(${h3},96%,99%,0)`);
+      ctx.beginPath();
+      for (let i = 0; i <= S; i++) {
+        const x = pts[i*2], y = pts[i*2+1] - hH + 1.2 * dpr;
+        i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = hi;
+      ctx.lineWidth   = 2.2 * dpr;
+      ctx.lineJoin    = 'round';
+      ctx.stroke();
+    }
+
+    let t = 0.8;  /* offset so it looks different from manifesto */
+
+    function draw() {
+      if (!visible) { requestAnimationFrame(draw); return; }
+      ctx.clearRect(0, 0, W, H);
+      const isMob = (W / dpr) < 560;
+      const S     = isMob ? 70 : 140;
+      const ribs  = isMob ? [RBA[0], RBA[2]] : RBA;
+      ribs.forEach(r => drawRibbon(r, S, t));
+      t += 0.0038;
+      requestAnimationFrame(draw);
+    }
+
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(canvas);
     window.addEventListener('resize', resize, { passive: true });
     resize();
     draw();
