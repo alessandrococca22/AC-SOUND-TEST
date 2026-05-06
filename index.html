@@ -349,11 +349,17 @@ input,select,textarea { font-family:var(--font); }
   z-index: 1;
 }
 .hero-bg-img img {
+  position: absolute;
+  inset: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   object-position: center top;
   filter: brightness(0.55);
+  opacity: 0;
+  transition: opacity 1.8s ease-in-out;
+  will-change: opacity;
 }
+.hero-bg-img img.active { opacity: 1; }
 /* subtle dark gradient so button is always readable */
 .hero-bg-img::after {
   content: '';
@@ -578,15 +584,39 @@ input,select,textarea { font-family:var(--font); }
 /* right — contact info */
 .modal-info {
   padding: 2.4rem 2rem;
-  background: rgba(0,0,0,0.2);
   border-left: 1px solid rgba(255,255,255,0.05);
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 2rem;
+  position: relative;
+  overflow: hidden;
 }
+.modal-info::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url('hf_20260506_140642_0cdbf501-415f-4f53-9cb0-e0695cbf7e36-3.jpg');
+  background-size: cover;
+  background-position: 78% 32%;
+  opacity: 0.38;
+  z-index: 0;
+}
+.modal-info::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.22) 100%);
+  z-index: 0;
+}
+.modal-info > * { position: relative; z-index: 1; }
 @media (max-width: 600px) {
-  .modal-info { border-left: none; border-top: 1px solid rgba(255,255,255,0.05); }
+  .modal-info {
+    border-left: none;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    min-height: 220px;
+  }
+  .modal-info::before { background-size: cover; background-position: 78% 32%; opacity: 0.32; }
 }
 .modal-info-head {
   font-family: var(--font-c);
@@ -648,13 +678,27 @@ input,select,textarea { font-family:var(--font); }
 }
 @media (max-width: 760px) { .about-inner { grid-template-columns: 1fr; gap: 3rem; } }
 
-.about-img { overflow: hidden; }
-.about-img img {
-  width: 100%;
+.about-img {
+  overflow: hidden;
+  position: relative;
   aspect-ratio: 4/5;
+  border-radius: 2px;
+}
+.about-img img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  object-position: center top;
-  filter: brightness(0.9) saturate(0.85);
+  object-position: center 15%;
+  filter: brightness(0.88) saturate(0.92);
+  opacity: 0;
+  transition: opacity 1.8s ease-in-out;
+  will-change: opacity;
+}
+.about-img img.active { opacity: 1; }
+@media (max-width: 760px) {
+  .about-img { aspect-ratio: 3/4; }
 }
 .about-heading {
   font-family: 'Bebas Neue', var(--font-c), sans-serif;
@@ -1067,9 +1111,9 @@ input,select,textarea { font-family:var(--font); }
     linear-gradient(to top, rgba(0,0,0,1) 0%, rgba(0,0,0,0.65) 18%, rgba(0,0,0,0) 36%),
     linear-gradient(to right,
       rgba(7,8,11,1)    0%,
-      rgba(7,8,11,1)   54%,
-      rgba(7,8,11,0.72) 65%,
-      rgba(7,8,11,0.08) 80%,
+      rgba(7,8,11,1)   66%,
+      rgba(7,8,11,0.72) 76%,
+      rgba(7,8,11,0.08) 88%,
       rgba(7,8,11,0)   100%);
 }
 
@@ -1615,10 +1659,8 @@ input,select,textarea { font-family:var(--font); }
      ================================================================ -->
 <section class="hero" id="hero">
   <div class="hero-bg-img">
-    <img
-      src="hf_20260401_231636_15bb3eca-91ff-495a-a172-fb1a8c609354.png"
-      alt="Alessandro Cocca in the studio" data-parallax="0.45"
-    >
+    <img src="hf_20260401_231636_15bb3eca-91ff-495a-a172-fb1a8c609354.png" alt="Alessandro Cocca in the studio" data-parallax="0.45" class="active" style="object-position:center 50%">
+    <img src="hf_20260506_184048_a9388dbb-9c85-4bec-a7a8-6cf24ab4d219-2-2.jpg" alt="Alessandro Cocca in the studio" data-parallax="0.45" style="object-position:center 38%">
   </div>
 
 
@@ -1633,7 +1675,8 @@ input,select,textarea { font-family:var(--font); }
 <section class="about" id="about">
   <div class="about-inner">
     <div class="about-img" data-anim="img">
-      <img src="Facetune_19-05-2025-17-02-20.jpeg" alt="Alessandro Cocca" data-parallax="0.46" style="aspect-ratio:4/5;object-fit:cover;filter:brightness(0.88) saturate(0.92)">
+      <img src="hf_20260506_143426_1aac15f2-2741-413b-bf32-3980a446dea2-2.jpg" alt="Alessandro Cocca" class="active" style="object-position:center 18%">
+      <img src="c0abc411-04d6-4d90-af52-a3f9673c4270.jpg"                       alt="Alessandro Cocca" style="object-position:center 28%">
     </div>
     <div class="about-text">
       <h2 class="about-heading" data-anim>About</h2>
@@ -2735,6 +2778,21 @@ input,select,textarea { font-family:var(--font); }
   })();
 
 })();
+
+/* ── Crossfade slideshow helper ── */
+function startSlideshow(imgs, interval) {
+  if (imgs.length < 2) return;
+  var cur = 0;
+  setInterval(function () {
+    imgs[cur].classList.remove('active');
+    cur = (cur + 1) % imgs.length;
+    imgs[cur].classList.add('active');
+  }, interval);
+}
+
+startSlideshow(Array.from(document.querySelectorAll('.about-img img')), 7000);
+startSlideshow(Array.from(document.querySelectorAll('.hero-bg-img img')), 6000);
+
 </script>
 
 </body>
