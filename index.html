@@ -2568,37 +2568,53 @@ input,select,textarea { font-family:var(--font); }
       if (!validate()) return;
 
       var service = document.querySelector('input[name="service"]:checked');
-      var data = {
-        subject: 'New Inquiry — AC Sound',
-        name:    getField('f-name').value.trim() + ' ' + getField('f-surname').value.trim(),
-        email:   getField('f-email').value.trim(),
-        service: service ? service.value : '',
-        message: getField('f-message').value.trim() || '(no message)'
+      var serviceLabels = {
+        'custom-production': 'Custom Production',
+        'mixing-mastering':  'Mixing & Mastering',
+        'audio-editing':     'Audio Editing',
+        'studio-session':    'Studio Session',
+        'sound-design':      'Sound Design'
       };
-
-      var body = [
-        'Name: '    + data.name,
-        'Email: '   + data.email,
-        'Service: ' + data.service,
-        '',
-        'Message:',
-        data.message
-      ].join('\n');
-
-      var mailto = 'mailto:info@acsound.net'
-        + '?subject=' + encodeURIComponent(data.subject)
-        + '&body='    + encodeURIComponent(body);
-
-      window.location.href = mailto;
+      var serviceVal   = service ? service.value : '';
+      var serviceLabel = serviceLabels[serviceVal] || serviceVal;
+      var senderName   = getField('f-name').value.trim() + ' ' + getField('f-surname').value.trim();
+      var senderEmail  = getField('f-email').value.trim();
+      var msgText      = getField('f-message').value.trim() || '(no message)';
 
       submitBtn.disabled = true;
       submitBtn.classList.add('sending');
       submitBtn.textContent = 'Sending…';
 
-      setTimeout(function () {
+      fetch('https://api.web3forms.com/submit', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify({
+          access_key: '88a5890c-b083-4625-871a-70a1e061ac73',
+          subject:    serviceLabel + ' — AC Sound',
+          from_name:  senderName,
+          replyto:    senderEmail,
+          name:       senderName,
+          email:      senderEmail,
+          message:    msgText
+        })
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
         submitBtn.classList.remove('sending');
-        successEl.classList.add('visible');
-      }, 800);
+        if (res.success) {
+          successEl.classList.add('visible');
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          alert('Something went wrong. Please email info@acsound.net directly.');
+        }
+      })
+      .catch(function () {
+        submitBtn.classList.remove('sending');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        alert('Could not connect. Please email info@acsound.net directly.');
+      });
     });
   })();
 
