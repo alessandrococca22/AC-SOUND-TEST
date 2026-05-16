@@ -480,6 +480,8 @@ input,select,textarea { font-family:var(--font); }
   display: flex;
   flex-direction: column;
   gap: 1.4rem;
+  position: relative;
+  overflow: hidden;
 }
 .modal-title {
   font-family: 'Bebas Neue', var(--font-c), sans-serif;
@@ -580,6 +582,87 @@ input,select,textarea { font-family:var(--font); }
   cursor: pointer;
 }
 .modal-submit:hover { background: rgba(255,255,255,0.18); border-color: rgba(255,255,255,0.5); }
+.modal-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+.modal-submit.sending { opacity: 0.7; cursor: wait; }
+
+/* field error highlight */
+.modal-field input.field-error,
+.modal-field textarea.field-error { border-color: rgba(255,80,80,0.7); }
+.field-error-msg {
+  font-size: 10px;
+  color: rgba(255,100,100,0.85);
+  letter-spacing: 0.05em;
+  margin-top: 2px;
+}
+
+/* success overlay inside modal-form */
+.modal-success {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  background: #0d0f12;
+  border-radius: 4px 0 0 4px;
+  z-index: 10;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
+  padding: 2.4rem;
+  text-align: center;
+}
+.modal-success.visible { opacity: 1; pointer-events: auto; }
+
+.success-ring {
+  width: 72px;
+  height: 72px;
+  flex-shrink: 0;
+}
+.success-ring circle {
+  fill: none;
+  stroke: rgba(255,255,255,0.12);
+  stroke-width: 2;
+}
+.success-ring .ring-progress {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 201;
+  stroke-dashoffset: 201;
+  transform-origin: center;
+  transform: rotate(-90deg);
+  transition: stroke-dashoffset 0.7s cubic-bezier(0.16,1,0.3,1) 0.15s;
+}
+.success-ring .check {
+  fill: none;
+  stroke: #fff;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 30;
+  stroke-dashoffset: 30;
+  transition: stroke-dashoffset 0.4s cubic-bezier(0.16,1,0.3,1) 0.75s;
+}
+.modal-success.visible .ring-progress { stroke-dashoffset: 0; }
+.modal-success.visible .check { stroke-dashoffset: 0; }
+
+.success-title {
+  font-family: 'Bebas Neue', var(--font-c), sans-serif;
+  font-size: clamp(36px, 5vw, 52px);
+  letter-spacing: -0.02em;
+  color: #fff;
+  line-height: 1;
+}
+.success-sub {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--t3);
+  max-width: 240px;
+  line-height: 1.6;
+}
 
 /* right — contact info */
 .modal-info {
@@ -1606,7 +1689,18 @@ input,select,textarea { font-family:var(--font); }
           <textarea id="f-message" placeholder="Brief description of your project…"></textarea>
         </div>
 
-        <button class="modal-submit" type="button">Send Message</button>
+        <button class="modal-submit" id="formSubmit" type="button">Send Message</button>
+
+        <!-- success overlay -->
+        <div class="modal-success" id="formSuccess">
+          <svg class="success-ring" viewBox="0 0 72 72">
+            <circle cx="36" cy="36" r="32"/>
+            <circle class="ring-progress" cx="36" cy="36" r="32"/>
+            <polyline class="check" points="22,36 31,45 50,26"/>
+          </svg>
+          <p class="success-title">Message Received</p>
+          <p class="success-sub">Thanks — I'll get back to you within 24 hours.</p>
+        </div>
       </div>
 
       <!-- contact info -->
@@ -2433,6 +2527,85 @@ input,select,textarea { font-family:var(--font); }
   closeBtn.addEventListener('click', closeModal);
   overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeMobNav(); } });
+
+  /* reset success state when modal opens */
+  openBtns.forEach(btn => btn && btn.addEventListener('click', function () {
+    document.getElementById('formSuccess').classList.remove('visible');
+    document.getElementById('formSubmit').disabled = false;
+    document.getElementById('formSubmit').textContent = 'Send Message';
+  }));
+
+  /* ---- CONTACT FORM SUBMISSION ---- */
+  (function () {
+    var submitBtn = document.getElementById('formSubmit');
+    var successEl = document.getElementById('formSuccess');
+
+    function getField(id) { return document.getElementById(id); }
+
+    function setError(input, show) {
+      input.classList.toggle('field-error', show);
+      var msg = input.parentNode.querySelector('.field-error-msg');
+      if (show && !msg) {
+        msg = document.createElement('span');
+        msg.className = 'field-error-msg';
+        msg.textContent = 'Required';
+        input.parentNode.appendChild(msg);
+      } else if (!show && msg) {
+        msg.remove();
+      }
+    }
+
+    function validate() {
+      var name  = getField('f-name');
+      var email = getField('f-email');
+      var ok = true;
+      if (!name.value.trim())  { setError(name, true);  ok = false; } else { setError(name, false); }
+      if (!email.value.trim() || !email.value.includes('@')) { setError(email, true); ok = false; } else { setError(email, false); }
+      return ok;
+    }
+
+    submitBtn.addEventListener('click', function () {
+      if (!validate()) return;
+
+      var service = document.querySelector('input[name="service"]:checked');
+      var data = {
+        access_key:  'YOUR_WEB3FORMS_KEY',
+        subject:     'New Inquiry — AC Sound',
+        from_name:   'AC Sound Contact Form',
+        name:        getField('f-name').value.trim() + ' ' + getField('f-surname').value.trim(),
+        email:       getField('f-email').value.trim(),
+        service:     service ? service.value : '',
+        message:     getField('f-message').value.trim() || '(no message)'
+      };
+
+      submitBtn.disabled = true;
+      submitBtn.classList.add('sending');
+      submitBtn.textContent = 'Sending…';
+
+      fetch('https://api.web3forms.com/submit', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body:    JSON.stringify(data)
+      })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        submitBtn.classList.remove('sending');
+        if (res.success) {
+          successEl.classList.add('visible');
+        } else {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Send Message';
+          alert('Something went wrong. Please try again or email info@acsound.net directly.');
+        }
+      })
+      .catch(function () {
+        submitBtn.classList.remove('sending');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Send Message';
+        alert('Could not send. Please email info@acsound.net directly.');
+      });
+    });
+  })();
 
   /* ---- ACTIVE NAV LINKS ---- */
   const navLinks = document.querySelectorAll('.hdr-nav a');
