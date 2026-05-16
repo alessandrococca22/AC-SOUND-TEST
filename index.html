@@ -2569,41 +2569,36 @@ input,select,textarea { font-family:var(--font); }
 
       var service = document.querySelector('input[name="service"]:checked');
       var data = {
-        access_key:  'YOUR_WEB3FORMS_KEY',
-        subject:     'New Inquiry — AC Sound',
-        from_name:   'AC Sound Contact Form',
-        name:        getField('f-name').value.trim() + ' ' + getField('f-surname').value.trim(),
-        email:       getField('f-email').value.trim(),
-        service:     service ? service.value : '',
-        message:     getField('f-message').value.trim() || '(no message)'
+        subject: 'New Inquiry — AC Sound',
+        name:    getField('f-name').value.trim() + ' ' + getField('f-surname').value.trim(),
+        email:   getField('f-email').value.trim(),
+        service: service ? service.value : '',
+        message: getField('f-message').value.trim() || '(no message)'
       };
+
+      var body = [
+        'Name: '    + data.name,
+        'Email: '   + data.email,
+        'Service: ' + data.service,
+        '',
+        'Message:',
+        data.message
+      ].join('\n');
+
+      var mailto = 'mailto:info@acsound.net'
+        + '?subject=' + encodeURIComponent(data.subject)
+        + '&body='    + encodeURIComponent(body);
+
+      window.location.href = mailto;
 
       submitBtn.disabled = true;
       submitBtn.classList.add('sending');
       submitBtn.textContent = 'Sending…';
 
-      fetch('https://api.web3forms.com/submit', {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body:    JSON.stringify(data)
-      })
-      .then(function (r) { return r.json(); })
-      .then(function (res) {
+      setTimeout(function () {
         submitBtn.classList.remove('sending');
-        if (res.success) {
-          successEl.classList.add('visible');
-        } else {
-          submitBtn.disabled = false;
-          submitBtn.textContent = 'Send Message';
-          alert('Something went wrong. Please try again or email info@acsound.net directly.');
-        }
-      })
-      .catch(function () {
-        submitBtn.classList.remove('sending');
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Send Message';
-        alert('Could not send. Please email info@acsound.net directly.');
-      });
+        successEl.classList.add('visible');
+      }, 800);
     });
   })();
 
