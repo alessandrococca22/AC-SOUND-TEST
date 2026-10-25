@@ -630,6 +630,8 @@ html.intro-lock .hdr-outer, html.intro-lock .ipn-list { animation-play-state: pa
   display: grid;
   grid-template-columns: 1fr 1fr;
   animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
+  /* floats above the blurred overlay instead of sitting flush with it */
+  box-shadow: 0 50px 110px -30px rgba(0,0,0,0.8), 0 18px 40px -16px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.05);
 }
 @media (max-width: 600px) {
   .modal { grid-template-columns: 1fr; }
@@ -946,8 +948,9 @@ html.intro-lock .hdr-outer, html.intro-lock .ipn-list { animation-play-state: pa
 }
 .about-img img.active { opacity: 1; }
 
-/* 3D tilt — photos lean a few degrees towards the cursor with a soft light (desktop only, see JS) */
-.tilt { --rx: 0deg; --ry: 0deg; --lx: 50%; --ly: 50%; }
+/* 3D tilt — photos lean a few degrees towards the cursor with a soft light (desktop only, see JS).
+   The shadow falls opposite the light/cursor so the card reads as lifted off the page, not just rotated. */
+.tilt { --rx: 0deg; --ry: 0deg; --lx: 50%; --ly: 50%; --sx: 0; --sy: 0; }
 .tilt::after {
   content: '';
   position: absolute; inset: 0; z-index: 3;
@@ -957,6 +960,19 @@ html.intro-lock .hdr-outer, html.intro-lock .ipn-list { animation-play-state: pa
   transition: opacity 0.8s ease;
 }
 .tilt.is-tilting::after { opacity: 1; }
+.tilt {
+  /* a pure black contact shadow is invisible on this near-black background — a soft cool
+     bloom (the site's own accent glow, see .svc-title / waveform) is what actually reads as lift */
+  box-shadow:
+    calc(var(--sx) * 1px) calc(var(--sy) * 1px + 20px) 46px -18px rgba(0,0,0,0.6),
+    0 0 100px -24px rgba(130,170,255,0.16);
+  transition: box-shadow 0.6s cubic-bezier(0.22,1,0.36,1);
+}
+.tilt.is-tilting {
+  box-shadow:
+    calc(var(--sx) * 1px) calc(var(--sy) * 1px + 20px) 52px -14px rgba(0,0,0,0.68),
+    0 0 130px -18px rgba(130,170,255,0.28);
+}
 @media (max-width: 760px) {
   .about-img { aspect-ratio: 3/4; }
 }
@@ -1170,7 +1186,14 @@ html.intro-lock .hdr-outer, html.intro-lock .ipn-list { animation-play-state: pa
   justify-content: flex-end;
   flex-wrap: wrap;
   gap: 1.6rem 3rem;
-  padding: 1.4rem var(--h-pad) 1.8rem;
+  padding: 1.6rem var(--h-pad) 2rem;
+  position: relative;
+  /* frosted glass shelf — the row artwork shows through, softened, instead of the player sitting flush on bare black */
+  background: linear-gradient(180deg, rgba(255,255,255,0.035), rgba(255,255,255,0.012));
+  border-top: 1px solid rgba(255,255,255,0.09);
+  border-bottom: 1px solid rgba(255,255,255,0.045);
+  backdrop-filter: blur(20px) saturate(1.15);
+  -webkit-backdrop-filter: blur(20px) saturate(1.15);
 }
 
 /* ── Before / After player — audio/<slug>-before.mp3 + -after.mp3 ── */
@@ -3812,10 +3835,14 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
         el.style.setProperty('--rx', ((0.5 - py) * 5).toFixed(2) + 'deg');
         el.style.setProperty('--lx', (px * 100).toFixed(1) + '%');
         el.style.setProperty('--ly', (py * 100).toFixed(1) + '%');
+        /* shadow falls opposite the light so the lift reads as physical, not just a rotated flat image */
+        el.style.setProperty('--sx', ((px - 0.5) * -34).toFixed(1));
+        el.style.setProperty('--sy', ((py - 0.5) * -22).toFixed(1));
         el.classList.add('is-tilting');
       });
       el.addEventListener('pointerleave', () => {
         el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg');
+        el.style.setProperty('--sx', '0'); el.style.setProperty('--sy', '0');
         el.classList.remove('is-tilting');
       });
     });
