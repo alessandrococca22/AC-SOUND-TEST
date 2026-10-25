@@ -2,8 +2,29 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
 <title>AC Sound — Alessandro Cocca, Sound Engineer</title>
+<meta name="description" content="AC Sound — Alessandro Cocca, sound engineer. Mixing, production and live sound, with studio experience at Signature Studios on SSL and Neve consoles.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32.png">
+<link rel="icon" type="image/png" sizes="512x512" href="img/icon-512.png">
+<link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+<!-- Social cards — absolute URLs required; update if the site moves to a custom domain -->
+<link rel="canonical" href="https://alessandrococca22.github.io/AC-SOUND-TEST/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AC Sound">
+<meta property="og:title" content="AC Sound — Alessandro Cocca, Sound Engineer">
+<meta property="og:description" content="Mixing · Production · Live Sound">
+<meta property="og:url" content="https://alessandrococca22.github.io/AC-SOUND-TEST/">
+<meta property="og:image" content="https://alessandrococca22.github.io/AC-SOUND-TEST/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="AC Sound logo over a studio photo of Alessandro Cocca">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AC Sound — Alessandro Cocca, Sound Engineer">
+<meta name="twitter:description" content="Mixing · Production · Live Sound">
+<meta name="twitter:image" content="https://alessandrococca22.github.io/AC-SOUND-TEST/img/og-image.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,200;0,300;0,400;0,500;0,600;1,300&family=Barlow+Condensed:wght@200;300;400;500;600;700&family=Bebas+Neue&family=Outfit:wght@300&display=swap" rel="stylesheet">
@@ -17,7 +38,7 @@
   --dark-3:  #2f3234;
   --light:   #ffffff;
   --light-2: #f3f3f3;
-  --t1: #efefef; --t2: #b9b9b9; --t3: #9b9b9b; --t4: #636363;
+  --t1: #efefef; --t2: #b9b9b9; --t3: #9b9b9b; --t4: #808080; /* t3/t4 pass WCAG AA (4.5:1) on all dark section backgrounds */
   --tl: #1e2124; --tlm: #636363;
   --max-w: 1400px;
   --h-pad: 48px;
@@ -31,9 +52,12 @@
    RESET
    ================================================================ */
 *,*::before,*::after { box-sizing:border-box; margin:0; padding:0; }
-html  { scroll-behavior:smooth; }
+html  { scroll-behavior:smooth; -webkit-text-size-adjust:100%; text-size-adjust:100%; }
 body  { font-family:var(--font); font-weight:300; background:var(--dark);
-        color:var(--t1); overflow-x:hidden; -webkit-font-smoothing:antialiased; }
+        color:var(--t1); overflow-x:hidden; -webkit-font-smoothing:antialiased;
+        -webkit-tap-highlight-color:transparent;
+        /* iPhone landscape: keep content clear of the notch */
+        padding-left:env(safe-area-inset-left); padding-right:env(safe-area-inset-right); }
 img   { display:block; max-width:100%; height:auto; }
 a     { text-decoration:none; color:inherit; }
 ul,ol { list-style:none; }
@@ -45,9 +69,9 @@ input,select,textarea { font-family:var(--font); }
    ================================================================ */
 [data-anim] {
   opacity: 0;
-  transform: translateY(100px) scale(0.968);
-  transition: opacity 1.35s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.35s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(56px) scale(0.985);
+  transition: opacity 1.2s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
   will-change: transform, opacity;
 }
 [data-anim].is-visible {
@@ -58,8 +82,8 @@ input,select,textarea { font-family:var(--font); }
 [data-anim="img"] {
   opacity: 0;
   transform: scale(1.06);
-  transition: opacity 1.55s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 1.55s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 1.5s cubic-bezier(0.22, 1, 0.36, 1);
 }
 [data-anim="img"].is-visible {
   opacity: 1;
@@ -97,6 +121,15 @@ input,select,textarea { font-family:var(--font); }
 [data-anim][data-delay="1"] { transition-delay: 0.16s; }
 [data-anim][data-delay="2"] { transition-delay: 0.32s; }
 [data-anim][data-delay="3"] { transition-delay: 0.50s; }
+/* list rows fade in place — a translate + nth-child stagger let a delayed row
+   sit on top of the row below it (e.g. Jordan Smithy over Temilola) */
+.portfolio-row[data-anim],
+.svc-row[data-anim],
+.footer [data-anim] {
+  transform: none;
+  transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1), background 0.48s ease;
+  transition-delay: 0s;
+}
 
 /* ================================================================
    HEADER — floating pill
@@ -105,7 +138,7 @@ input,select,textarea { font-family:var(--font); }
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 500;
-  padding: 14px var(--h-pad) 0;
+  padding: calc(14px + env(safe-area-inset-top)) max(var(--h-pad), env(safe-area-inset-right)) 0 max(var(--h-pad), env(safe-area-inset-left));
   pointer-events: none;
 }
 .hdr-wrap {
@@ -209,8 +242,9 @@ input,select,textarea { font-family:var(--font); }
 .hdr-right a:hover { color: #fff; }
 .hdr-right svg { width:15px; height:15px; fill:currentColor; }
 
-@media (max-width: 900px) { .hdr-nav { gap: 1.2rem; font-size: 12.5px; } }
-@media (max-width: 720px) { .hdr-nav { display: none; } }
+@media (max-width: 1180px) { .hdr-nav { gap: 1.4rem; } }
+/* below this the centred nav collides with the logo/socials (iPad, iPhone landscape) — hamburger instead */
+@media (max-width: 1024px) { .hdr-nav { display: none; } }
 
 /* ================================================================
    HAMBURGER BUTTON
@@ -220,9 +254,9 @@ input,select,textarea { font-family:var(--font); }
   flex-direction: column;
   justify-content: center;
   gap: 5px;
-  width: 36px;
-  height: 36px;
-  padding: 6px;
+  width: 44px;
+  height: 44px;
+  padding: 10px;
   background: none;
   border: none;
   cursor: pointer;
@@ -245,14 +279,14 @@ input,select,textarea { font-family:var(--font); }
 .hdr-hamburger.is-open span:nth-child(2) { opacity: 0; width: 0; }
 .hdr-hamburger.is-open span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); width: 22px; }
 
-@media (max-width: 720px) {
+@media (max-width: 1024px) {
   .hdr-hamburger { display: flex; }
   .hdr-social-wrap,
   .hdr-divider,
   .hdr-gtt { display: none; }
   .hdr-logo img { height: 14px; }
   .hdr-logo { margin-left: 6px; }
-  .hdr-outer { padding: 10px var(--h-pad) 0; }
+  .hdr-outer { padding: calc(10px + env(safe-area-inset-top)) max(var(--h-pad), env(safe-area-inset-right)) 0 max(var(--h-pad), env(safe-area-inset-left)); }
   .hdr-wrap { height: 52px; padding: 0 10px 0 16px; }
 }
 @media (max-width: 400px) {
@@ -267,13 +301,14 @@ input,select,textarea { font-family:var(--font); }
   position: fixed;
   inset: 0;
   z-index: 490;
-  background: rgba(5,5,7,0.97);
+  background: #050507;
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 5rem var(--h-pad) 3rem;
+  padding: calc(5rem + env(safe-area-inset-top)) var(--h-pad) calc(3rem + env(safe-area-inset-bottom));
+  overflow-y: auto;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.42s cubic-bezier(0.22,1,0.36,1);
@@ -300,6 +335,11 @@ input,select,textarea { font-family:var(--font); }
   transform: translateY(0);
 }
 .mob-nav-links a:first-child { border-top: 1px solid rgba(255,255,255,0.06); }
+@media (max-height: 560px) {
+  .mob-nav { justify-content: flex-start; }
+  .mob-nav-links a { font-size: clamp(1.8rem, 7vh, 2.6rem); padding: 0.35rem 0; }
+  .mob-nav-bottom { margin-top: 1.4rem; }
+}
 .mob-nav-links a:hover,
 .mob-nav-links a:active { color: #fff; letter-spacing: 0.05em; }
 .mob-nav-bottom {
@@ -343,6 +383,8 @@ input,select,textarea { font-family:var(--font); }
 .hero {
   position: relative;
   height: 100vh;
+  height: 100svh;
+  background: #000;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -363,17 +405,18 @@ input,select,textarea { font-family:var(--font); }
   object-position: center top;
   filter: brightness(0.55);
   opacity: 0;
-  transition: opacity 1.8s ease-in-out;
+  transition: opacity 2.8s ease-in-out;
   will-change: opacity;
 }
 .hero-bg-img img.active { opacity: 1; }
-/* subtle dark gradient so button is always readable */
+/* vignette for the buttons + a long fade into the black section below */
 .hero-bg-img::after {
   content: '';
   position: absolute;
   inset: 0;
-  background: radial-gradient(ellipse 60% 60% at 50% 50%,
-    rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
+  background:
+    linear-gradient(to bottom, rgba(5,5,7,0) 55%, rgba(5,5,7,0.85) 92%, #050507 100%),
+    radial-gradient(ellipse 60% 60% at 50% 50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.45) 100%);
 }
 
 /* bottom-centred Enter button */
@@ -422,7 +465,7 @@ input,select,textarea { font-family:var(--font); }
 
 .hero-scroll {
   position: absolute;
-  bottom: 2.2rem;
+  bottom: calc(2.2rem + env(safe-area-inset-bottom));
   left: 50%;
   transform: translateX(-50%);
   z-index: 5;
@@ -433,10 +476,116 @@ input,select,textarea { font-family:var(--font); }
   font-size: 10px;
   letter-spacing: 0.15em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.3);
-  animation: bounceY 1.4s 1s ease-in-out infinite;
+  color: rgba(255,255,255,0.6);
 }
 .hero-scroll svg { width:14px; height:14px; stroke:currentColor; fill:none; stroke-width:1.5; }
+
+/* background video — hidden until hero.mp4 actually loads, photo stays as fallback */
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: brightness(0.55);
+  opacity: 0;
+  transition: opacity 2.4s ease;
+  z-index: 1;
+}
+.hero-video.is-ready { opacity: 1; }
+.hero-bg-img::after { z-index: 2; }
+
+/* buttons sit low on the photo, just above the scroll cue */
+.hero-content {
+  position: absolute;
+  left: 0; right: 0;
+  bottom: calc(5.6rem + env(safe-area-inset-bottom, 0px));
+  z-index: 5;
+  display: flex;
+  justify-content: center;
+  padding: 0 var(--h-pad);
+  will-change: transform;
+}
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.hero-ctas {
+  display: flex;
+  gap: 0.9rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 190px;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  padding: 16px 36px;
+  border-radius: 50px;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: #fff;
+  background: rgba(0,0,0,0.2);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  transition: background 0.5s ease, color 0.5s ease, border-color 0.5s ease,
+              transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transform: translate(var(--magx, 0), var(--magy, 0));
+}
+.hero-btn:hover { border-color: #fff; background: rgba(255,255,255,0.08); }
+.hero-btn--solid { background: #fff; color: #000; border-color: #fff; }
+.hero-btn--solid:hover { background: rgba(255,255,255,0.86); color: #000; }
+.hero-btn:focus-visible { outline: 1px solid #fff; outline-offset: 4px; }
+/* tiny live-equalizer accent inside the Listen button */
+.hero-eq { display: inline-flex; align-items: center; gap: 2px; height: 9px; margin-right: 10px; flex-shrink: 0; }
+.hero-eq span { width: 2px; height: 100%; background: currentColor; border-radius: 1px; transform: scaleY(0.35); transform-origin: 50% 100%; animation: heroEqBounce 1.1s ease-in-out infinite; }
+.hero-eq span:nth-child(1) { animation-delay: -0.9s; }
+.hero-eq span:nth-child(2) { animation-delay: -0.5s; }
+.hero-eq span:nth-child(3) { animation-delay: -0.15s; }
+@keyframes heroEqBounce { 0%, 100% { transform: scaleY(0.35); } 50% { transform: scaleY(1); } }
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero-content { bottom: calc(3.6rem + env(safe-area-inset-bottom)); }
+  .hero-scroll { display: none; }
+}
+@media (max-width: 560px) {
+  .hero-ctas { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; }
+  .hero-btn { padding: 17px 28px; }
+}
+
+/* Site entrance — starts as the opening animation merges into the page (or on Skip):
+     0s    photos fade 0 → 100 behind the logo (nothing else done to them)
+     0.6s  header          0.8s  Listen / Book a session
+     1.4s  section index   1.8s  scroll cue */
+.hdr-outer {
+  opacity: 0;
+  animation: heroFade 1.2s cubic-bezier(0.45, 0, 0.25, 1) 0.6s forwards;
+}
+.hero-ctas {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: heroRise 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.8s forwards;
+}
+@keyframes heroRise { to { opacity: 1; transform: translateY(0); } }
+.hero-bg-img {
+  opacity: 0;
+  animation: heroFade 2s cubic-bezier(0.45, 0, 0.25, 1) forwards;
+}
+.ipn-list {
+  opacity: 0;
+  animation: heroFade 1.2s ease 1.4s forwards;
+}
+.hero-scroll {
+  opacity: 0;
+  animation: heroFade 1.2s ease 1.8s forwards, bounceY 2.4s 3.2s ease-in-out infinite;
+}
+@keyframes heroFade { to { opacity: 1; } }
+/* everything above waits, frozen, while the opening animation plays */
+html.intro-lock .hero *, html.intro-lock .hero-bg-img,
+html.intro-lock .hdr-outer, html.intro-lock .ipn-list { animation-play-state: paused; }
 
 /* ================================================================
    KEYFRAMES
@@ -474,12 +623,20 @@ input,select,textarea { font-family:var(--font); }
   width: 100%;
   max-width: 800px;
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
   display: grid;
   grid-template-columns: 1fr 1fr;
   animation: modalIn 0.35s cubic-bezier(0.16,1,0.3,1) forwards;
 }
-@media (max-width: 600px) { .modal { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .modal { grid-template-columns: 1fr; }
+  .modal-row { grid-template-columns: 1fr; }
+  .modal-form { padding: 2.2rem 1.4rem 1.6rem; }
+  .modal-close { width: 44px; height: 44px; top: 8px; right: 8px; }
+}
 
 /* left — form */
 .modal-form {
@@ -686,7 +843,7 @@ input,select,textarea { font-family:var(--font); }
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url('hf_20260506_140642_0cdbf501-415f-4f53-9cb0-e0695cbf7e36-3.jpg');
+  background-image: url('img/contact-bg.webp');
   background-size: cover;
   background-position: 78% 32%;
   opacity: 0.38;
@@ -755,9 +912,10 @@ input,select,textarea { font-family:var(--font); }
 .about {
   position: relative;
   z-index: 10;
-  background: var(--light);
+  background: #050507;
   padding: var(--v-sec) var(--h-pad);
 }
+.about .sec-body { color: var(--t3); }
 .about-inner {
   max-width: var(--max-w);
   margin: 0 auto;
@@ -783,10 +941,22 @@ input,select,textarea { font-family:var(--font); }
   object-position: center 15%;
   filter: brightness(0.88) saturate(0.92);
   opacity: 0;
-  transition: opacity 1.8s ease-in-out;
-  will-change: opacity;
+  transition: opacity 2.8s ease-in-out;
+  will-change: opacity, transform;
 }
 .about-img img.active { opacity: 1; }
+
+/* 3D tilt — photos lean a few degrees towards the cursor with a soft light (desktop only, see JS) */
+.tilt { --rx: 0deg; --ry: 0deg; --lx: 50%; --ly: 50%; }
+.tilt::after {
+  content: '';
+  position: absolute; inset: 0; z-index: 3;
+  pointer-events: none;
+  background: radial-gradient(circle at var(--lx) var(--ly), rgba(255,255,255,0.09), rgba(255,255,255,0) 55%);
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+.tilt.is-tilting::after { opacity: 1; }
 @media (max-width: 760px) {
   .about-img { aspect-ratio: 3/4; }
 }
@@ -796,7 +966,7 @@ input,select,textarea { font-family:var(--font); }
   font-weight: 400;
   letter-spacing: -0.03em;
   text-transform: uppercase;
-  color: var(--tl);
+  color: var(--t1);
   line-height: 0.95;
   margin-bottom: 2rem;
 }
@@ -837,11 +1007,12 @@ input,select,textarea { font-family:var(--font); }
   padding: var(--v-sec) var(--h-pad);
   text-align: center;
   overflow: hidden;
-  min-height: 520px;
+  min-height: 100vh;
+  min-height: 100svh;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
 }
-@media (max-width: 560px) { .manifesto { min-height: 340px; padding: 5rem var(--h-pad); } }
+@media (max-width: 560px) { .manifesto { min-height: 0; padding: 3rem var(--h-pad) 5rem; } }
 .manifesto-canvas {
   position: absolute;
   inset: 0;
@@ -850,7 +1021,8 @@ input,select,textarea { font-family:var(--font); }
   z-index: 1;
   pointer-events: none;
 }
-.manifesto-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; }
+.manifesto-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 2; padding-top: 46vh; padding-top: 46svh; }
+@media (max-width: 560px) { .manifesto-inner { padding-top: 300px; } }
 .manifesto-text {
   font-family: var(--font-c);
   font-size: clamp(24px, 4vw, 52px);
@@ -886,7 +1058,32 @@ input,select,textarea { font-family:var(--font); }
       transparent 80px
     );
 }
-.portfolio-inner { max-width: var(--max-w); margin: 0 auto; }
+.portfolio-inner { max-width: var(--max-w); margin: 0 auto; position: relative; z-index: 1; }
+
+/* 3D sound terrain — rows of waveforms receding in perspective behind the heading.
+   Faded on the left (desktop) and towards the rows so the copy stays readable. */
+.terrain {
+  position: absolute;
+  left: 0; top: 0;
+  width: 100%;
+  height: clamp(420px, 62vh, 640px);
+  z-index: 0;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 55%, transparent 100%);
+}
+@media (min-width: 761px) {
+  .terrain {
+    -webkit-mask-image: linear-gradient(to right, transparent 38%, #000 66%), linear-gradient(to bottom, #000 62%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(to right, transparent 38%, #000 66%), linear-gradient(to bottom, #000 62%, transparent 100%);
+    mask-composite: intersect;
+  }
+}
+@media (max-width: 760px) {
+  .terrain { height: 300px; }
+  .portfolio { padding-top: calc(var(--v-sec) + 170px); }
+}
 .portfolio-header { margin-bottom: 3rem; }
 .portfolio-heading {
   font-family: 'Bebas Neue', var(--font-c), sans-serif;
@@ -920,11 +1117,12 @@ input,select,textarea { font-family:var(--font); }
   background: var(--row-bg, none) center/cover no-repeat;
   opacity: 0.07;
   filter: blur(12px) saturate(0.4);
-  transition: opacity 0.4s;
+  transition: opacity 0.4s, transform 0.7s cubic-bezier(0.16,1,0.3,1);
   pointer-events: none;
-  transform: scale(1.1);
+  /* artwork drifts a few px against the cursor (desktop only, see JS) — reads as sitting a layer behind the row */
+  transform: scale(1.1) translate(calc((var(--px, 0.5) - 0.5) * -22px), calc((var(--py, 0.5) - 0.5) * -14px));
 }
-.portfolio-row:hover::before { opacity: 0.13; }
+@media (hover: hover) { .portfolio-row:hover::before { opacity: 0.13; } }
 .portfolio-row.is-open::before { opacity: 0.32; filter: blur(0px) saturate(1); }
 
 .portfolio-row-trigger {
@@ -941,7 +1139,7 @@ input,select,textarea { font-family:var(--font); }
   text-align: left;
   transition: opacity 0.2s;
 }
-.portfolio-row-trigger:hover { opacity: 0.8; }
+@media (hover: hover) { .portfolio-row-trigger:hover { opacity: 0.8; } }
 .portfolio-row-num   { font-family: var(--font-c); font-size: 11px; letter-spacing: 0.14em; color: var(--t4); }
 .portfolio-row-title { font-family: var(--font-c); font-size: clamp(1rem, 2vw, 1.55rem); font-weight: 400; letter-spacing: 0.04em; text-transform: uppercase; color: var(--t1); }
 .portfolio-row-cat   { font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--t4); white-space: nowrap; }
@@ -952,7 +1150,7 @@ input,select,textarea { font-family:var(--font); }
     padding: 1.2rem 0;
   }
   .portfolio-row-cat { display: none; }
-  .portfolio-row-title { font-size: 0.78rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+  .portfolio-row-title { font-size: 0.95rem; line-height: 1.3; min-width: 0; }
   .portfolio-row-num { font-size: 10px; }
 }
 .portfolio-row-icon  { color: var(--t3); font-size: 20px; font-weight: 200; line-height:1; transition: transform 0.35s cubic-bezier(0.16,1,0.3,1); text-align:center; }
@@ -968,9 +1166,49 @@ input,select,textarea { font-family:var(--font); }
 .portfolio-panel-inner { overflow: hidden; }
 .portfolio-panel-content {
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 1.6rem 3rem;
   padding: 1.4rem var(--h-pad) 1.8rem;
+}
+
+/* ── Before / After player — audio/<slug>-before.mp3 + -after.mp3 ── */
+.ba-player { display: flex; align-items: center; gap: 1.2rem; flex: 1 1 340px; max-width: 560px; margin-right: auto; }
+.ba-player[hidden] { display: none; }
+.ba-play {
+  width: 46px; height: 46px; flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.4);
+  display: flex; align-items: center; justify-content: center;
+  transition: border-color 0.5s ease, background 0.5s ease;
+}
+.ba-play:hover { border-color: #fff; background: rgba(255,255,255,0.06); }
+.ba-play svg { width: 14px; height: 14px; fill: #fff; }
+.ba-i-pause, .ba-player.is-playing .ba-i-play { display: none; }
+.ba-player.is-playing .ba-i-pause { display: block; }
+.ba-track { flex: 1; min-width: 0; }
+/* waveform seek bar — two stacked bar rows, the top one clipped to playback progress */
+.ba-wave { position: relative; height: 30px; padding: 6px 0; cursor: pointer; touch-action: none; }
+.ba-wave-bars { position: absolute; inset: 6px 0; display: flex; align-items: center; gap: 2px; }
+.ba-wave-bars span { flex: 1 1 auto; min-width: 1.5px; height: 18%; border-radius: 1px; transition: height 0.5s cubic-bezier(0.22,1,0.36,1); }
+.ba-wave-bg span { background: rgba(255,255,255,0.18); transition: height 0.5s cubic-bezier(0.22,1,0.36,1), background 0.4s ease; }
+.ba-wave:hover .ba-wave-bg span { background: rgba(255,255,255,0.3); }
+.ba-wave-fg { clip-path: inset(0 calc(100% - var(--played, 0%)) 0 0); }
+.ba-wave-fg span { background: #fff; }
+.ba-meta { display: flex; justify-content: space-between; font-size: 11px; color: var(--t3); font-variant-numeric: tabular-nums; }
+.ba-toggle { display: flex; flex-shrink: 0; padding: 3px; border: 1px solid rgba(255,255,255,0.25); border-radius: 50px; }
+.ba-toggle button {
+  font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase;
+  padding: 8px 14px; border-radius: 50px; color: var(--t3);
+  transition: background 0.5s ease, color 0.5s ease;
+}
+.ba-toggle button[aria-pressed="true"] { background: #fff; color: #000; }
+.ba-play:focus-visible, .ba-toggle button:focus-visible, .ba-wave:focus-visible { outline: 1px solid #fff; outline-offset: 3px; }
+@media (max-width: 560px) {
+  .ba-player { flex-basis: 100%; gap: 0.8rem; }
+  .ba-wave { height: 26px; }
+  .spot-wrap { max-width: none; }
 }
 .portfolio-panel-bg { display: none; }
 
@@ -1003,7 +1241,7 @@ input,select,textarea { font-family:var(--font); }
   font-weight: 400;
   letter-spacing: 0.32em;
   text-transform: uppercase;
-  color: rgba(255,255,255,0.22);
+  color: var(--t3);
   margin-bottom: 1.8rem;
 }
 .artist-heading {
@@ -1019,7 +1257,7 @@ input,select,textarea { font-family:var(--font); }
 .artist-body {
   font-size: 14px;
   font-weight: 300;
-  color: rgba(255,255,255,0.42);
+  color: var(--t3);
   line-height: 1.85;
   max-width: 440px;
 }
@@ -1046,11 +1284,15 @@ input,select,textarea { font-family:var(--font); }
 .artist-platform:hover { color: #fff; border-color: rgba(255,255,255,0.35); }
 .artist-platform svg { width: 12px; height: 12px; fill: currentColor; }
 .artist-media { position: relative; overflow: hidden; }
+.tilt.is-visible {
+  transform: perspective(1100px) rotateX(var(--rx)) rotateY(var(--ry));
+  transition: transform 0.9s cubic-bezier(0.22, 1, 0.36, 1), opacity 1.5s cubic-bezier(0.22, 1, 0.36, 1);
+}
 .artist-media img {
   width: 100%;
   height: auto;
   display: block;
-  filter: brightness(0.78) saturate(0.82);
+  filter: brightness(0.8) contrast(1.15) saturate(0.82);
 }
 .artist-wave { display: none; }
 .artist-wave-bars { display: none; }
@@ -1067,7 +1309,7 @@ input,select,textarea { font-family:var(--font); }
 }
 .services-inner { max-width: var(--max-w); margin: 0 auto; }
 .services-header { margin-bottom: 3.5rem; }
-.services .sec-eye  { color: rgba(255,255,255,0.28); }
+.services .sec-eye  { color: var(--t3); }
 .services .sec-head { color: rgba(255,255,255,0.92); }
 
 .svc-list { border-top: 1px solid rgba(255,255,255,0.10); }
@@ -1107,13 +1349,13 @@ input,select,textarea { font-family:var(--font); }
   font-family: var(--font-c);
   font-size: 9px;
   letter-spacing: 0;
-  color: rgba(255,255,255,0.22);
+  color: var(--t3);
   transition: color 0.42s ease, border-color 0.42s ease;
 }
 .svc-desc {
   font-size: 13px;
   font-weight: 300;
-  color: rgba(255,255,255,0.28);
+  color: var(--t3);
   line-height: 1.58;
   max-width: 280px;
   transition: color 0.42s ease;
@@ -1130,7 +1372,7 @@ input,select,textarea { font-family:var(--font); }
   transition: letter-spacing 0.42s ease, color 0.42s ease, text-shadow 0.42s ease;
 }
 .svc-arrow {
-  color: rgba(255,255,255,0.20);
+  color: var(--t4);
   font-size: 18px;
   font-weight: 300;
   line-height: 1;
@@ -1149,7 +1391,7 @@ input,select,textarea { font-family:var(--font); }
 .svc-row.is-active .svc-num    { border-color: rgba(255,255,255,0.52); color: rgba(255,255,255,0.82); }
 
 .svc-row:hover .svc-desc,
-.svc-row.is-active .svc-desc   { color: rgba(255,255,255,0.58); }
+.svc-row.is-active .svc-desc   { color: var(--t2); }
 
 /* ── Background animation layer — absolute fill, always rendered, shown on hover ── */
 .svc-row-trigger { position: relative; z-index: 2; }
@@ -1231,14 +1473,16 @@ input,select,textarea { font-family:var(--font); }
   .svc-row-trigger { grid-template-columns: 1fr auto 36px; gap: 1rem; padding: 2.4rem 0; }
   .svc-left { flex-direction: row; align-items: center; gap: 0.8rem; }
   .svc-desc { display: none; }
-  .svc-title { font-size: clamp(2.4rem, 9vw, 4.5rem); }
+  .svc-title { font-size: clamp(2.4rem, 9vw, 4.5rem); min-width: 0; }
   .svc-bg { padding-right: 3%; }
   .svc-bg-icon svg { max-width: 170px; height: auto; }
 }
 @media (max-width: 560px) {
   .svc-row-trigger { grid-template-columns: 44px 1fr 28px; gap: 0.6rem; padding: 1.8rem 0; }
   .svc-left { flex-direction: column; gap: 0.15rem; }
-  .svc-title { font-size: clamp(2rem, 12vw, 3.2rem); text-align: right; }
+  .svc-title { font-size: min(11vw, 3.2rem); text-align: right; min-width: 0; }
+  .svc-row:hover .svc-title,
+  .svc-row.is-active .svc-title { letter-spacing: -0.02em; }
   .svc-bg { padding-right: 2%; }
   .svc-bg::after { display: none; }
   .svc-bg-icon svg { max-width: 130px; height: auto; }
@@ -1473,13 +1717,52 @@ input,select,textarea { font-family:var(--font); }
 .cta-link:hover { color: #fff; border-color: rgba(255,255,255,0.4); }
 
 /* ================================================================
+   CONTACT — visible above the footer
+   ================================================================ */
+.contact {
+  position: relative;
+  z-index: 10;
+  background: #050507;
+  padding: var(--v-sec) var(--h-pad);
+  min-height: 80vh;
+  min-height: 80svh;
+  display: flex;
+  align-items: center;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.contact-inner { max-width: var(--max-w); width: 100%; margin: 0 auto; text-align: center; }
+.contact .sec-eye { color: var(--t3); }
+.contact-heading {
+  font-family: var(--font-c);
+  font-size: clamp(2.6rem, 7vw, 6rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  line-height: 1;
+  color: #fff;
+  margin-bottom: 2.6rem;
+}
+.contact-lines { display: flex; flex-direction: column; align-items: center; gap: 0.6rem; }
+.contact-link {
+  font-family: var(--font-c);
+  font-size: clamp(1.3rem, 2.6vw, 2.1rem);
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  color: var(--t2);
+  border-bottom: 1px solid transparent;
+  transition: color 0.5s ease, border-color 0.5s ease;
+}
+.contact-link:hover { color: #fff; border-color: rgba(255,255,255,0.5); }
+.contact-note { margin: 1.6rem auto 2.8rem; font-size: 14px; color: var(--t3); line-height: 1.7; max-width: 420px; }
+
+/* ================================================================
    FOOTER
    ================================================================ */
 .footer {
   position: relative;
   z-index: 10;
   background: #000;
-  padding: var(--v-sec) var(--h-pad) 3rem;
+  padding: var(--v-sec) var(--h-pad) calc(3rem + env(safe-area-inset-bottom));
 }
 .footer-logo img {
   height: 48px;
@@ -1506,7 +1789,7 @@ input,select,textarea { font-family:var(--font); }
 @media (max-width: 760px) { .footer-cols { grid-template-columns: repeat(2, 1fr); } }
 .footer-col h4 { font-family: var(--font-c); font-size: 10px; font-weight: 500; letter-spacing: 0.18em; text-transform: uppercase; color: var(--t4); margin-bottom: 1.1rem; }
 .footer-col li { margin-bottom: 0.6rem; }
-.footer-col li a { font-size: 13px; font-weight: 300; color: var(--t2); transition: color 0.2s; }
+.footer-col li a { font-size: 13px; font-weight: 300; color: var(--t2); transition: color 0.2s; display: inline-block; }
 .footer-col li a:hover { color: #fff; }
 .footer-bottom {
   max-width: var(--max-w);
@@ -1536,8 +1819,12 @@ input,select,textarea { font-family:var(--font); }
   transition: opacity 0.4s ease;
 }
 .ipn.hidden { opacity: 0; pointer-events: none !important; }
-@media (min-width: 760px) { .ipn { display: block; } }
-.ipn-list { position: absolute; bottom: 2rem; left: var(--h-pad); pointer-events: all; }
+/* only on wide screens, where the content padding leaves a real gutter for it */
+@media (min-width: 1200px) {
+  :root { --h-pad: clamp(48px, 8vw, 128px); }
+  .ipn { display: block; }
+}
+.ipn-list { position: absolute; bottom: 2rem; left: 16px; pointer-events: all; }
 .ipn-item { height: 1.8rem; transition: transform 0.2s ease; }
 .ipn-item:nth-child(1) { transform: translate(0,   calc(5 * 100%)); }
 .ipn-item:nth-child(2) { transform: translate(3px, calc(4 * 100%)); }
@@ -1561,17 +1848,28 @@ input,select,textarea { font-family:var(--font); }
 
 
 /* ================================================================
-   INTRO — logo animation shown once per session on load
+   INTRO — the AC Sound opening animation, played on every visit
    ================================================================ */
 html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
 .intro {
   position: fixed;
   inset: 0;
   z-index: 10000;
-  background: #000;
+  background: #020203;
   overflow: hidden;
   cursor: pointer;
-  transition: opacity 0.4s ease, visibility 0s linear 0.4s;
+  transition: background-color 1.1s cubic-bezier(0.45, 0, 0.25, 1),
+              opacity 0.5s cubic-bezier(0.45, 0, 0.25, 1), visibility 0s linear 0.5s;
+}
+/* merge: the black lifts and the home screen comes up behind the logo */
+.intro.is-merging { background-color: rgba(2,2,3,0); pointer-events: none; }
+.intro.is-merging .intro-glow { opacity: 0; }
+.intro.is-merging .intro-skip { opacity: 0; }
+.intro-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(58% 58% at 50% 48%, #121215 0%, rgba(6,6,7,0) 72%);
+  transition: opacity 1.1s cubic-bezier(0.45, 0, 0.25, 1);
 }
 .intro.is-done { opacity: 0; visibility: hidden; pointer-events: none; }
 .intro-stage {
@@ -1595,12 +1893,14 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   height: 620px;
   transform-style: preserve-3d;
   opacity: 0;
+  will-change: transform, opacity;
 }
 .intro-ring {
   position: absolute;
   inset: 0;
   border-radius: 50%;
   border: 1px solid rgba(255,255,255,.30);
+  box-shadow: inset 0 0 70px rgba(170,190,225,.06);
 }
 .intro-ring-outer {
   position: absolute;
@@ -1616,6 +1916,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   -webkit-mask: radial-gradient(circle, transparent 0 306px, #000 308px);
   mask: radial-gradient(circle, transparent 0 306px, #000 308px);
   opacity: 0;
+  will-change: transform, opacity;
 }
 .intro-row {
   position: absolute;
@@ -1626,6 +1927,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   gap: 30px;
   white-space: nowrap;
   transform-style: preserve-3d;
+  will-change: transform;
 }
 .intro-mark {
   height: 76px;
@@ -1634,6 +1936,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   display: block;
   opacity: 0;
   filter: drop-shadow(0 8px 26px rgba(0,0,0,.75));
+  will-change: transform, opacity;
 }
 .intro-divider {
   width: 2px;
@@ -1651,6 +1954,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   letter-spacing: 0.1em;
   color: #f4f4f6;
   opacity: 0;
+  will-change: transform, opacity;
 }
 .intro-skip {
   position: absolute;
@@ -1664,17 +1968,48 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   color: rgba(255,255,255,0.32);
   background: none;
   border: none;
-  padding: 10px 14px;
+  padding: 14px 22px;
   cursor: pointer;
+  transition: opacity 0.4s ease;
+}
+
+/* ================================================================
+   TOUCH DEVICES (iPhone / iPad) — 44px tap targets, no zoom-on-focus
+   ================================================================ */
+@media (pointer: coarse) {
+  .modal-field input, .modal-field textarea { font-size: 16px; }   /* < 16px makes iOS zoom in */
+  .hdr-logo a { padding: 14px 0; margin: -14px 0; }
+  .hdr-right a { padding: 14px; margin: -14px; }
+  .hdr-nav a { padding: 15px 0; }
+  .contact-link { padding: 8px 0; }
+  .footer-col li { margin-bottom: 0.15rem; }
+  .footer-col li a { font-size: 15px; padding: 10px 0; }
+  .ba-toggle button { padding: 12px 16px; }
+}
+
+/* ================================================================
+   REDUCED MOTION — content appears instantly, nothing loops
+   ================================================================ */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    animation-delay: 0s !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0s !important;
+  }
+  [data-anim] { opacity: 1; transform: none; clip-path: none; filter: none; }
 }
 </style>
 </head>
 <body>
 
 <!-- ================================================================
-     INTRO — logo animation (plays once per session, tap to skip)
+     INTRO — AC Sound opening animation (every visit; tap, Skip or Esc to skip)
      ================================================================ -->
-<div class="intro" id="intro" aria-hidden="true">
+<div class="intro notranslate" id="intro" aria-hidden="true" translate="no">
+  <div class="intro-glow"></div>
   <div class="intro-stage" id="introStage">
     <div class="intro-scene" id="introScene">
       <div class="intro-badge" id="introBadge">
@@ -1692,13 +2027,22 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   <button class="intro-skip" type="button" id="introSkip">Skip</button>
 </div>
 <script>
+/* Port of "AC Sound Logo Animation.html" (sound-animation.jsx) — same scenes, cues and easing:
+   Ignite 1.9s · Mark 1.9s · Wordmark 2.5s · Settle 2.2s · Rest 1.5s, played at 2x (5s).
+   At MERGE_AT the black lifts and the site starts coming up behind the logo, which then fades. */
+/* Every load starts on the home screen: don't restore the old scroll position,
+   and drop a #section left in the address bar by the nav. */
+(function () {
+  if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+  if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+  window.scrollTo(0, 0);
+  window.addEventListener('load', function () { window.scrollTo(0, 0); });
+})();
+
 (function () {
   var intro = document.getElementById('intro');
-  var seen = false;
-  try { seen = sessionStorage.getItem('acIntroSeen') === '1'; } catch (e) {}
   var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (seen || reduce) { intro.remove(); return; }
-  try { sessionStorage.setItem('acIntroSeen', '1'); } catch (e) {}
+  if (reduce) { intro.remove(); return; }
   document.documentElement.classList.add('intro-lock');
 
   var stage = document.getElementById('introStage');
@@ -1723,12 +2067,22 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
       return from + (to - from) * ease((t - start) / (end - start));
     };
   }
+  function interp(xs, ys, ease) {
+    return function (t) {
+      if (t <= xs[0]) return ys[0];
+      for (var i = 1; i < xs.length; i++) {
+        if (t <= xs[i]) return ys[i - 1] + (ys[i] - ys[i - 1]) * ease((t - xs[i - 1]) / (xs[i] - xs[i - 1]));
+      }
+      return ys[ys.length - 1];
+    };
+  }
 
-  // Scene cues in authored seconds (scene durations / speed factor 0.62)
+  // The original runs its motion constants in authored time = real time / K
   var K = 0.62;
-  var C = { Mark: 1.9 / K, Wordmark: 3.8 / K };
-  var END_T = C.Wordmark + 3.0; // hand over to the site once SOUND has resolved
-  var DURATION = 2.4;           // real seconds for the whole intro
+  var C = { Mark: 1.9 / K, Wordmark: 3.8 / K, Settle: 6.3 / K, Rest: 8.5 / K };
+  var END_T = 10 / K;
+  var SPEED = 1.6;       // playback rate vs the original (10s -> 6.25s) — slower than 2x so every cue has room to read
+  var MERGE_AT = 4.5;    // real seconds: late in Settle, while AC | SOUND is still fully lit (same authored moment as SPEED=2's 3.6s)
 
   // 1920x1080 composition, scaled up on narrow screens so the lockup stays legible
   var offset = 0;
@@ -1754,8 +2108,10 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   var markPop = anim(0.9, 1, C.Mark + 0.2, C.Mark + 1.7, E.outCubic);
   var markSpin = anim(22, 0, C.Mark + 0.2, C.Mark + 1.9, E.inOutCubic);
   var dividerH = anim(0, 1, C.Wordmark + 1.1, C.Wordmark + 2.1, E.inOutCubic);
-  var camZa = anim(-130, -46, 0, C.Wordmark, E.inOutSine);
-  var camZb = anim(-46, 0, C.Wordmark, END_T, E.inOutSine);
+  var camZf = interp([0, C.Wordmark, C.Settle, C.Rest + 2], [-130, -46, 0, 26], E.inOutSine);
+  var outFadeF = anim(0, 1, C.Rest + 0.7, C.Rest + 1.9, E.inOutSine);
+  var outScaleF = anim(1, 1.025, C.Rest + 0.4, C.Rest + 2, E.inOutSine);
+  var sheenF = anim(-30, 130, C.Settle + 0.7, C.Settle + 2.6, E.inOutSine);
   var letterAnims = [];
   for (var i = 0; i < letters.length; i++) {
     var st = C.Wordmark + 1.2 + i * 0.075;
@@ -1767,38 +2123,51 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   }
 
   function render(T) {
-    var camZ = T < C.Wordmark ? camZa(T) : camZb(T);
-    var camY = 0;
+    var camZ = camZf(T);
+    var camY = T > C.Settle ? Math.sin((T - C.Settle) * 0.4) * 1.3 : 0;   // slow parallax drift
+    var sheen = sheenF(T);                                                 // highlight across SOUND
+    scene.style.opacity = 1 - outFadeF(T);                                 // Rest: fade to black
     badge.style.transform = 'translateZ(' + camZ + 'px) rotateY(' + (badgeIn(T) + camY) + 'deg) scale(' + badgeScale(T) * badgeGrow(T) + ')';
     badge.style.opacity = clamp(badgeFadeIn(T) - badgeFadeOut(T), 0, 1);
     gleam.style.transform = 'rotate(' + T * 26 + 'deg)';
     gleam.style.opacity = clamp(gleamIn(T) - gleamOut(T), 0, 1);
     var rowX = anim(offset, 0, C.Wordmark, C.Wordmark + 1.9, E.inOutCubic)(T);
-    row.style.transform = 'translate(-50%, -50%) translateZ(' + camZ + 'px) rotateY(' + camY + 'deg) translateX(' + rowX + 'px)';
+    row.style.transform = 'translate(-50%, -50%) translateZ(' + camZ + 'px) rotateY(' + camY + 'deg) translateX(' + rowX + 'px) scale(' + outScaleF(T) + ')';
     mark.style.opacity = markIn(T);
     mark.style.transform = 'rotateY(' + markSpin(T) + 'deg) scale(' + markPop(T) + ')';
     divider.style.transform = 'scaleY(' + dividerH(T) + ')';
     for (var i = 0; i < letters.length; i++) {
       var a = letterAnims[i], el = letters[i];
+      var glow = clamp(1 - Math.abs(sheen - (i / (letters.length - 1)) * 100) / 22, 0, 1);
       el.style.opacity = a.o(T);
       el.style.transform = 'translateZ(' + a.z(T) + 'px) rotateX(' + a.rx(T) + 'deg)';
+      el.style.textShadow = glow > 0 ? '0 0 ' + (26 * glow) + 'px rgba(255,255,255,' + (0.45 * glow) + ')' : 'none';
     }
   }
 
-  var t0 = null, raf = 0, finished = false;
+  var t0 = null, raf = 0, merged = false, finished = false;
+  function merge() {
+    if (merged) return;
+    merged = true;
+    intro.classList.add('is-merging');                       // black lifts, logo stays for a moment
+    document.documentElement.classList.remove('intro-lock'); // site entrance starts underneath
+    document.dispatchEvent(new Event('introdone'));
+  }
   function finish() {
     if (finished) return;
     finished = true;
+    merge();
     cancelAnimationFrame(raf);
     intro.classList.add('is-done');
-    document.documentElement.classList.remove('intro-lock');
     window.removeEventListener('resize', layout);
-    setTimeout(function () { intro.remove(); }, 500);
+    setTimeout(function () { intro.remove(); }, 600);
   }
   function tick(now) {
     if (t0 === null) t0 = now;
-    var T = (now - t0) / 1000 / DURATION * END_T;
+    var r = (now - t0) / 1000;
+    var T = r * SPEED / K;
     render(T);
+    if (r >= MERGE_AT) merge();
     if (T >= END_T) { finish(); return; }
     raf = requestAnimationFrame(tick);
   }
@@ -1838,7 +2207,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
         <a href="https://instagram.com/rvnnermusic" target="_blank" rel="noopener" aria-label="Instagram">
           <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
         </a>
-        <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <a href="https://www.linkedin.com/in/alessandro-cocca-8696382a2" target="_blank" rel="noopener" aria-label="LinkedIn">
           <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
         </a>
       </div>
@@ -1869,7 +2238,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
       <a href="https://instagram.com/rvnnermusic" target="_blank" rel="noopener" aria-label="Instagram">
         <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
       </a>
-      <a href="https://linkedin.com" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/alessandro-cocca-8696382a2" target="_blank" rel="noopener" aria-label="LinkedIn">
         <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
       </a>
       <a href="https://open.spotify.com/album/2zgkWG3LRqEJHWLLeOCznQ" target="_blank" rel="noopener" aria-label="Spotify">
@@ -1904,7 +2273,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
             </label>
             <label>
               <input type="radio" name="service" value="mixing-mastering">
-              <span>Mixing &amp; Mastering</span>
+              <span translate="no" class="notranslate">Mixing &amp; Mastering</span>
             </label>
             <label>
               <input type="radio" name="service" value="audio-editing">
@@ -1916,7 +2285,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
             </label>
             <label>
               <input type="radio" name="service" value="sound-design">
-              <span>Sound Design</span>
+              <span translate="no" class="notranslate">Sound Design</span>
             </label>
           </div>
         </div>
@@ -1988,16 +2357,25 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
 </div>
 
 <!-- ================================================================
-     HERO — full-screen image + centred Enter
+     HERO — full-screen photo, Listen / Book a session along the bottom
      ================================================================ -->
 <section class="hero" id="hero">
   <div class="hero-bg-img">
-    <img src="hf_20260401_231636_15bb3eca-91ff-495a-a172-fb1a8c609354.png" alt="Alessandro Cocca in the studio" data-parallax="0.45" class="active" style="object-position:center 50%">
-    <img src="hf_20260506_184048_a9388dbb-9c85-4bec-a7a8-6cf24ab4d219-2-2.jpg" alt="Alessandro Cocca in the studio" data-parallax="0.45" style="object-position:center 38%">
+    <img src="img/hero-studio.webp" srcset="img/hero-studio-900.webp 900w, img/hero-studio.webp 1376w" sizes="100vw" width="1376" height="768" fetchpriority="high" alt="Alessandro Cocca at the mixing console" data-parallax="0.45" class="active" style="object-position:center 50%">
+    <img src="img/hero-headphones.webp" srcset="img/hero-headphones-1000.webp 1000w, img/hero-headphones.webp 2000w" sizes="100vw" width="2000" height="1125" decoding="async" alt="Alessandro Cocca in the studio" data-parallax="0.45" style="object-position:center 38%">
+    <!-- Background video: drop hero.mp4 next to index.html and it fades in over the photos -->
+    <video class="hero-video" id="heroVideo" data-src="hero.mp4" poster="img/hero-studio.webp" muted autoplay loop playsinline preload="none" aria-hidden="true"></video>
   </div>
 
+  <div class="hero-content">
+    <h1 class="sr-only"><span translate="no" class="notranslate">AC Sound</span> — Mixing, Production and Live Sound</h1>
+    <div class="hero-ctas">
+      <a href="#portfolio" class="hero-btn hero-btn--solid magnetic"><span class="hero-eq" aria-hidden="true"><span></span><span></span><span></span></span>Listen</a>
+      <button type="button" class="hero-btn magnetic" id="openModalHero">Book a session</button>
+    </div>
+  </div>
 
-  <div class="hero-scroll">
+  <div class="hero-scroll" aria-hidden="true">
     Scroll <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
   </div>
 </section>
@@ -2007,9 +2385,9 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
      ================================================================ -->
 <section class="about" id="about">
   <div class="about-inner">
-    <div class="about-img" data-anim="img">
-      <img src="hf_20260506_143426_1aac15f2-2741-413b-bf32-3980a446dea2-2.jpg" alt="Alessandro Cocca" class="active" style="object-position:center 18%">
-      <img src="c0abc411-04d6-4d90-af52-a3f9673c4270.jpg"                       alt="Alessandro Cocca" style="object-position:center 28%">
+    <div class="about-img tilt" data-anim="img">
+      <img src="img/about-console.webp" srcset="img/about-console-720.webp 720w, img/about-console.webp 1120w" sizes="(max-width: 760px) 100vw, 50vw" width="1120" height="1634" loading="lazy" decoding="async" alt="Alessandro Cocca in the studio" data-parallax="0.14" class="active" style="object-position:center 18%">
+      <img src="img/about-portrait.webp" srcset="img/about-portrait-720.webp 720w, img/about-portrait.webp 1120w" sizes="(max-width: 760px) 100vw, 50vw" width="1120" height="1496" loading="lazy" decoding="async" alt="Portrait of Alessandro Cocca" data-parallax="0.14" style="object-position:center 28%">
     </div>
     <div class="about-text">
       <h2 class="about-heading" data-anim>About</h2>
@@ -2017,13 +2395,13 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
         With a proven track record in high-profile studio environments, my approach combines deep technical knowledge with "artistic empathy" — prioritizing the artist's vision and emotional state to translate abstract creative goals into tangible sonic results.
       </p>
       <p class="sec-body" data-anim data-delay="2">
-        Holding a BA (Hons) in Audio Production from the University of Hertfordshire/SAE Institute and expanding my expertise in Live Sound Engineering at the ICMP Institute.
+        Holding a BA (Hons) in Audio Production from the <span translate="no" class="notranslate">University of Hertfordshire/SAE Institute</span> and expanding my expertise in Live Sound Engineering at the <span translate="no" class="notranslate">ICMP Institute</span>.
       </p>
       <p class="sec-body" data-anim data-delay="2">
-        I have provided technical support at Signature Studios, for top-tier UK artists, including D-Block Europe (on their Spotify #1 Debut <em>PTSD 2</em>).
+        I have provided technical support at <span translate="no" class="notranslate">Signature Studios</span>, for top-tier UK artists, including <span translate="no" class="notranslate">D-Block Europe</span> (on their <span translate="no" class="notranslate">Spotify</span> #1 Debut <em translate="no" class="notranslate">PTSD 2</em>).
       </p>
       <p class="sec-body" data-anim data-delay="3">
-        My studio experience includes operating industry-standard consoles such as the SSL G+, SSL AWS 900, and Neve VR Legend.
+        My studio experience includes operating industry-standard consoles such as the <span translate="no" class="notranslate">SSL G+</span>, <span translate="no" class="notranslate">SSL AWS 900</span>, and <span translate="no" class="notranslate">Neve VR Legend</span>.
       </p>
       <p class="sec-body" data-anim data-delay="3">
         Beyond the mixing desk, I am an experienced freelancer in production, specializing in studio session, mixing and mastering. Whether I am managing complex recording sessions or refining audio assets for live performance, I bring a calm demeanor under pressure and a proactive commitment to audio fidelity.
@@ -2039,7 +2417,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   <canvas class="manifesto-canvas" id="soundwaveCanvas"></canvas>
   <div class="manifesto-inner">
     <p class="manifesto-text" data-anim>
-      Professional audio that captures every dimension of sound — from the studio to the stage, for music, film, and live events. Front-of-house to the final mix.
+      Professional audio that captures every dimension of sound — from the studio to the stage, for music, film, and live events. <span translate="no" class="notranslate">Front-of-house</span> to the final mix.
     </p>
   </div>
 </section>
@@ -2048,6 +2426,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
      PORTFOLIO
      ================================================================ -->
 <section class="portfolio" id="portfolio">
+  <canvas class="terrain" id="terrainCanvas" aria-hidden="true"></canvas>
   <div class="portfolio-inner">
     <div class="portfolio-header" data-anim>
       <h2 class="portfolio-heading">Portfolio</h2>
@@ -2055,17 +2434,18 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     </div>
 
     <!-- 01 -->
-    <div class="portfolio-row" style="--row-bg:url('Screenshot%202026-02-15%20at%2017.39_edited.jpg')" data-anim>
+    <div class="portfolio-row" style="--row-bg:url('img/portfolio-01.webp')" data-anim>
       <button class="portfolio-row-trigger" aria-expanded="false">
         <span class="portfolio-row-num">01</span>
-        <span class="portfolio-row-title">Malka — Secret</span>
-        <span class="portfolio-row-cat">Co-Production</span>
+        <span class="portfolio-row-title notranslate" translate="no">Malka — Secret</span>
+        <span class="portfolio-row-cat notranslate" translate="no">Co-Production</span>
         <span class="portfolio-row-icon">+</span>
       </button>
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
             <div class="portfolio-panel-bg"></div>
+            <div class="ba-player" data-audio="malka-secret" hidden></div>
             <div class="spot-wrap">
               <div class="spot-player" data-track="4S6q5OVfl56zgKVNieNgUt">
                 <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
@@ -2077,17 +2457,18 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     </div>
 
     <!-- 02 -->
-    <div class="portfolio-row" style="--row-bg:url('Screenshot%202026-02-15%20at%2017.39.42.png')" data-anim>
+    <div class="portfolio-row" style="--row-bg:url('img/portfolio-02.webp')" data-anim>
       <button class="portfolio-row-trigger" aria-expanded="false">
         <span class="portfolio-row-num">02</span>
-        <span class="portfolio-row-title">Malka — In Spanish</span>
-        <span class="portfolio-row-cat">Production, Recording Engineer</span>
+        <span class="portfolio-row-title notranslate" translate="no">Malka — In Spanish</span>
+        <span class="portfolio-row-cat notranslate" translate="no">Production, Recording Engineer</span>
         <span class="portfolio-row-icon">+</span>
       </button>
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
             <div class="portfolio-panel-bg"></div>
+            <div class="ba-player" data-audio="malka-in-spanish" hidden></div>
             <div class="spot-wrap">
               <div class="spot-player" data-track="4XzYh04RaJEAhFMPrzqzHF">
                 <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
@@ -2099,17 +2480,18 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     </div>
 
     <!-- 03 -->
-    <div class="portfolio-row" style="--row-bg:url('Screenshot%202026-02-15%20at%2017.39.23.png')" data-anim>
+    <div class="portfolio-row" style="--row-bg:url('img/portfolio-03.webp')" data-anim>
       <button class="portfolio-row-trigger" aria-expanded="false">
         <span class="portfolio-row-num">03</span>
-        <span class="portfolio-row-title">Anna Lunoe &amp; Yiiga — Pearl (Find My Way)</span>
-        <span class="portfolio-row-cat">Recording Engineer</span>
+        <span class="portfolio-row-title notranslate" translate="no">Anna Lunoe &amp; Yiiga — Pearl (Find My Way)</span>
+        <span class="portfolio-row-cat notranslate" translate="no">Recording Engineer</span>
         <span class="portfolio-row-icon">+</span>
       </button>
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
             <div class="portfolio-panel-bg"></div>
+            <div class="ba-player" data-audio="anna-lunoe-yiiga-pearl" hidden></div>
             <div class="spot-wrap">
               <div class="spot-player" data-track="6wzfJQZy2967aOrzSmsob9">
                 <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
@@ -2121,17 +2503,18 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     </div>
 
     <!-- 04 -->
-    <div class="portfolio-row" style="--row-bg:url('Screenshot%202026-02-15%20at%2017.38.40.png')" data-anim>
+    <div class="portfolio-row" style="--row-bg:url('img/portfolio-04.webp')" data-anim>
       <button class="portfolio-row-trigger" aria-expanded="false">
         <span class="portfolio-row-num">04</span>
-        <span class="portfolio-row-title">Jordan Smithy — Echo</span>
-        <span class="portfolio-row-cat">Mixing &amp; Mastering</span>
+        <span class="portfolio-row-title notranslate" translate="no">Jordan Smithy — Echo</span>
+        <span class="portfolio-row-cat notranslate" translate="no">Mixing &amp; Mastering</span>
         <span class="portfolio-row-icon">+</span>
       </button>
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
             <div class="portfolio-panel-bg"></div>
+            <div class="ba-player" data-audio="jordan-smithy-echo" hidden></div>
             <div class="spot-wrap">
               <div class="spot-player" data-track="7xioHxZ8RUiKhanjdEC2fw">
                 <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
@@ -2143,17 +2526,18 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     </div>
 
     <!-- 05 -->
-    <div class="portfolio-row" style="--row-bg:url('Screenshot%202026-02-15%20at%2017.58.39.png')" data-anim>
+    <div class="portfolio-row" style="--row-bg:url('img/portfolio-05.webp')" data-anim>
       <button class="portfolio-row-trigger" aria-expanded="false">
         <span class="portfolio-row-num">05</span>
-        <span class="portfolio-row-title">Temilola — Runaway</span>
-        <span class="portfolio-row-cat">Production, Mixing &amp; Mastering</span>
+        <span class="portfolio-row-title notranslate" translate="no">Temilola — Runaway</span>
+        <span class="portfolio-row-cat notranslate" translate="no">Production, Mixing &amp; Mastering</span>
         <span class="portfolio-row-icon">+</span>
       </button>
       <div class="portfolio-panel">
         <div class="portfolio-panel-inner">
           <div class="portfolio-panel-content">
             <div class="portfolio-panel-bg"></div>
+            <div class="ba-player" data-audio="temilola-runaway" hidden></div>
             <div class="spot-wrap">
               <div class="spot-player" data-track="0RvJpM22Kdo9SyIq4UoNUG">
                 <iframe src="" width="100%" height="80" frameBorder="0" allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
@@ -2173,18 +2557,18 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
 <section class="artist" id="artist">
   <div class="artist-inner">
     <!-- Image LEFT — AP style: product/visual dominates left side -->
-    <div class="artist-media" data-anim="img">
-      <img src="hf_20260307_000627_67586920-8799-4790-8fde-ee3ea65d1e05.png" alt="Artist Page" data-parallax="0.40">
+    <div class="artist-media tilt" data-anim="img">
+      <img src="img/artist-rvnner.webp" srcset="img/artist-rvnner-800.webp 800w, img/artist-rvnner.webp 1400w" sizes="(max-width: 760px) 100vw, 50vw" width="1400" height="1867" loading="lazy" decoding="async" alt="RVNNER portrait" data-parallax="0.40">
     </div>
     <!-- Text RIGHT -->
     <div>
-      <p class="artist-eyebrow" data-anim>RVNNER</p>
+      <p class="artist-eyebrow notranslate" translate="no" data-anim>RVNNER</p>
       <h2 class="artist-heading" data-anim>Artist Page</h2>
       <p class="artist-body" data-anim data-delay="1">Beyond the faders and the frequency charts lies my true obsession: building worlds through sound. When I'm not engineering for clients, I'm producing my own work.</p>
-      <p class="artist-body" data-anim data-delay="2">This is my portfolio of original works — where technical expertise meets creative intuition. The name <em>RVNNER</em> embodies the capability to move through genres, moods, and textures, creating something entirely new.</p>
+      <p class="artist-body" data-anim data-delay="2">This is my portfolio of original works — where technical expertise meets creative intuition. The name <em translate="no" class="notranslate">RVNNER</em> embodies the capability to move through genres, moods, and textures, creating something entirely new.</p>
       <p class="artist-body" data-anim data-delay="2">My expertise spans beats, remix, and original production.</p>
       <div class="artist-listen" data-anim data-delay="3">
-        <a href="https://rvnner.komi.io/@/mini-site/content" target="_blank" rel="noopener" class="hero-enter" style="font-size:12px;padding:14px 40px;border-radius:50px;color:rgba(255,255,255,0.80);border-color:rgba(255,255,255,0.28);text-decoration:none;display:inline-flex;align-items:center;gap:10px">
+        <a href="links/index.html" target="_blank" rel="noopener" class="hero-enter" style="font-size:12px;padding:14px 40px;border-radius:50px;color:rgba(255,255,255,0.80);border-color:rgba(255,255,255,0.28);text-decoration:none;display:inline-flex;align-items:center;gap:10px">
           Find out more
           <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
         </a>
@@ -2212,7 +2596,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
             <span class="svc-num">1</span>
             <span class="svc-desc">Refined dynamics and spatial balance engineered for your final release — streaming, vinyl, or broadcast.</span>
           </div>
-          <span class="svc-title">Mixing</span>
+          <span class="svc-title notranslate" translate="no">Mixing</span>
           <span class="svc-arrow">→</span>
         </div>
         <div class="svc-bg" aria-hidden="true">
@@ -2343,7 +2727,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
             <span class="svc-num">2</span>
             <span class="svc-desc">Full-service music production from concept through final delivery — any genre, any scale.</span>
           </div>
-          <span class="svc-title">Production</span>
+          <span class="svc-title notranslate" translate="no">Production</span>
           <span class="svc-arrow">→</span>
         </div>
         <div class="svc-bg" aria-hidden="true">
@@ -2446,7 +2830,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
             <span class="svc-num">3</span>
             <span class="svc-desc">In-studio recording and session engineering — artist-focused, precision-driven from first take to final comp.</span>
           </div>
-          <span class="svc-title">Recording</span>
+          <span class="svc-title notranslate" translate="no">Recording</span>
           <span class="svc-arrow">→</span>
         </div>
         <div class="svc-bg" aria-hidden="true">
@@ -2542,7 +2926,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
             <span class="svc-num">4</span>
             <span class="svc-desc">Original sound design for film, advertising, interactive media, and live performance.</span>
           </div>
-          <span class="svc-title">Sound Design</span>
+          <span class="svc-title notranslate" translate="no">Sound Design</span>
           <span class="svc-arrow">→</span>
         </div>
         <div class="svc-bg" aria-hidden="true">
@@ -2632,11 +3016,23 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
 
     </div>
 
-    <div style="text-align:center;margin-top:3.5rem" data-anim>
-      <button class="hero-enter" id="openModal3" style="font-size:12px;padding:14px 48px;border-radius:50px;color:rgba(255,255,255,0.75);border-color:rgba(255,255,255,0.28)">
-        Let's Work
-        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-      </button>
+  </div>
+</section>
+
+<!-- ================================================================
+     CONTACT
+     ================================================================ -->
+<section class="contact" id="contact">
+  <div class="contact-inner">
+    <p class="sec-eye" data-anim>Contact</p>
+    <h2 class="contact-heading" data-anim data-delay="1">Book a session</h2>
+    <div class="contact-lines" data-anim data-delay="2">
+      <a href="mailto:info@acsound.net" class="contact-link notranslate" translate="no">info@acsound.net</a>
+      <a href="tel:+447933738673" class="contact-link notranslate" translate="no">+44 7933 738 673</a>
+    </div>
+    <p class="contact-note" data-anim data-delay="2">I typically respond within 24 hours. For urgent requests, call directly.</p>
+    <div data-anim data-delay="3">
+      <button type="button" class="hero-btn hero-btn--solid magnetic" id="openModal3">Send a message</button>
     </div>
   </div>
 </section>
@@ -2645,16 +3041,16 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
 <!-- ================================================================
      FOOTER
      ================================================================ -->
-<footer class="footer" id="contact">
+<footer class="footer">
   <div class="footer-inner">
     <div class="footer-brand" data-anim>
       <div class="footer-logo">
         <a href="#hero">
-          <img src="Gemini_Generated_Image_emdguiemdguiemdg-2.jpg" alt="AC Sound">
+          <img src="img/footer-mark.webp" width="400" height="242" loading="lazy" decoding="async" alt="AC Sound">
         </a>
       </div>
       <p class="footer-tag">Professional audio services for music, film, and live events.</p>
-      <p class="footer-copy">© 2026 Alessandro Cocca. All rights reserved.</p>
+      <p class="footer-copy">© 2026 <span translate="no" class="notranslate">Alessandro Cocca</span>. All rights reserved.</p>
     </div>
     <div class="footer-cols">
       <div class="footer-col" data-anim>
@@ -2662,7 +3058,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
         <ul>
           <li><a href="#services">Custom Production</a></li>
           <li><a href="#services">Audio Editing</a></li>
-          <li><a href="#services">Mixing &amp; Mastering</a></li>
+          <li><a href="#services" translate="no" class="notranslate">Mixing &amp; Mastering</a></li>
         </ul>
       </div>
       <div class="footer-col" data-anim data-delay="1">
@@ -2683,7 +3079,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
         <h4>Connect</h4>
         <ul>
           <li><a href="https://instagram.com/rvnnermusic" target="_blank">Instagram</a></li>
-          <li><a href="https://linkedin.com" target="_blank">LinkedIn</a></li>
+          <li><a href="https://www.linkedin.com/in/alessandro-cocca-8696382a2" target="_blank" rel="noopener">LinkedIn</a></li>
           <li><a href="https://open.spotify.com/album/2zgkWG3LRqEJHWLLeOCznQ" target="_blank">Spotify</a></li>
         </ul>
       </div>
@@ -2722,6 +3118,22 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
      ================================================================ -->
 <script>
 (function () {
+
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---- HERO VIDEO — fades in only once hero.mp4 can play; the photos stay as fallback ---- */
+  const heroVideo = document.getElementById('heroVideo');
+  if (heroVideo && !reduceMotion) {
+    heroVideo.addEventListener('canplay', () => {
+      heroVideo.classList.add('is-ready');
+      heroVideo.play().catch(() => {});
+    }, { once: true });
+    heroVideo.addEventListener('error', () => heroVideo.remove(), true);
+    heroVideo.src = heroVideo.dataset.src;
+  } else if (heroVideo) {
+    heroVideo.remove();
+  }
+
 
   /* ---- SCROLL ANIMATION — Bugatti reveal ---- */
   const animEls = document.querySelectorAll('[data-anim]');
@@ -2764,6 +3176,7 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
   const overlay   = document.getElementById('modalOverlay');
   const openBtns  = [
     document.getElementById('openModal'),
+    document.getElementById('openModalHero'),
     document.getElementById('openModal3'),
     document.getElementById('mobNavGtt'),
   ];
@@ -2954,12 +3367,6 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     });
   }
 
-  /* ---- CONTACT NAV → open modal ---- */
-  ['navContact', 'mobNavContact'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) el.addEventListener('click', e => { e.preventDefault(); openModal(); });
-  });
-
   /* ---- PARALLAX — Pagani-style continuous lerp loop for silky smooth movement ---- */
   const parallaxImgs = document.querySelectorAll('[data-parallax]');
   const pxCurrent    = new Map();
@@ -2970,8 +3377,20 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     return (rect.top + rect.height * 0.5 - window.innerHeight * 0.5) * rate;
   }
 
-  (function parallaxLoop() {
+  /* pointer depth for the hero photo (fine pointers only) */
+  const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const ptr = { x: 0, y: 0, tx: 0, ty: 0 };
+  if (finePointer) window.addEventListener('pointermove', e => {
+    ptr.tx = e.clientX / window.innerWidth * 2 - 1;
+    ptr.ty = e.clientY / window.innerHeight * 2 - 1;
+  }, { passive: true });
+
+  const heroContent = document.querySelector('.hero-content');
+
+  if (!reduceMotion) (function parallaxLoop() {
     const isMob = window.innerWidth < 760;
+    ptr.x += (ptr.tx - ptr.x) * 0.045;
+    ptr.y += (ptr.ty - ptr.y) * 0.045;
     parallaxImgs.forEach(img => {
       if (isMob) {
         if (img.style.transform) img.style.transform = '';
@@ -2979,12 +3398,183 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
       }
       const target = getParallaxTarget(img);
       const prev   = pxCurrent.has(img) ? pxCurrent.get(img) : target;
-      const next   = prev + (target - prev) * 0.088;
+      const next   = prev + (target - prev) * 0.07;
       pxCurrent.set(img, next);
-      img.style.transform = `translate3d(0,${next.toFixed(2)}px,0) scale(1.28)`;
+      /* zoom just enough to hide the edges for this rate, plus a slow ambient breath so the hero photo never sits dead still */
+      const rate   = parseFloat(img.dataset.parallax) || 0.28;
+      const hero   = img.closest('.hero-bg-img');
+      const dx     = hero ? -ptr.x * 16 : 0, dy = hero ? -ptr.y * 10 : 0;
+      const breath = hero ? Math.sin(performance.now() * 0.00032) * 0.012 : 0;
+      img.style.transform = `translate3d(${dx.toFixed(2)}px,${(next + dy).toFixed(2)}px,0) scale(${(1 + rate * 0.62 + breath).toFixed(3)})`;
     });
+    /* content drifts a touch opposite the photo — reads as a layer floating in front of it, not glued to the glass */
+    if (heroContent) heroContent.style.transform = isMob ? '' : `translate3d(${(ptr.x * 6).toFixed(2)}px, ${(ptr.y * 4).toFixed(2)}px, 0)`;
     requestAnimationFrame(parallaxLoop);
   })();
+
+  /* ---- BEFORE / AFTER PLAYER — stays hidden unless both files exist ---- */
+  const fmtTime = s => isFinite(s) ? `${Math.floor(s / 60)}:${String(Math.floor(s % 60)).padStart(2, '0')}` : '0:00';
+
+  function setupBA(el) {
+    if (el.dataset.ready) return;
+    el.dataset.ready = '1';
+    const urls = { before: `audio/${el.dataset.audio}-before.mp3`, after: `audio/${el.dataset.audio}-after.mp3` };
+    Promise.all(Object.values(urls).map(u => fetch(u, { method: 'HEAD' }).then(r => r.ok).catch(() => false)))
+      .then(found => { if (found.every(Boolean)) buildBA(el, urls); });
+  }
+
+  /* deterministic placeholder waveform — paints instantly, swapped for real peaks once decoded */
+  function seededPeaks(seed, count) {
+    let h = 0;
+    for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+    const rand = () => { h = (h * 1664525 + 1013904223) >>> 0; return h / 4294967296; };
+    const peaks = [];
+    let v = 0.5;
+    for (let i = 0; i < count; i++) {
+      v = Math.max(0.1, Math.min(1, v + (rand() - 0.5) * 0.55));
+      peaks.push(v);
+    }
+    return peaks;
+  }
+  /* real peaks from the actual mp3 — mono-summed, downsampled to `count` bars */
+  async function decodePeaks(url, count) {
+    try {
+      const AC = window.AudioContext || window.webkitAudioContext;
+      if (!AC) return null;
+      const buf = await fetch(url).then(r => r.ok ? r.arrayBuffer() : null);
+      if (!buf) return null;
+      const ctx = new AC();
+      const audioBuf = await ctx.decodeAudioData(buf);
+      const data = audioBuf.getChannelData(0);
+      const block = Math.max(1, Math.floor(data.length / count));
+      const peaks = [];
+      for (let i = 0; i < count; i++) {
+        let max = 0;
+        const start = i * block;
+        for (let j = 0; j < block; j++) { const v = Math.abs(data[start + j] || 0); if (v > max) max = v; }
+        peaks.push(max);
+      }
+      ctx.close();
+      const top = Math.max(...peaks) || 1;
+      return peaks.map(p => Math.max(0.1, p / top));
+    } catch { return null; }
+  }
+  const WAVE_BARS = 56;
+  function paintWave(el, peaks) {
+    [el.querySelector('.ba-wave-bg'), el.querySelector('.ba-wave-fg')].forEach(row => {
+      if (row.children.length !== peaks.length) row.innerHTML = peaks.map(() => '<span></span>').join('');
+      [...row.children].forEach((s, i) => { s.style.height = (8 + peaks[i] * 84) + '%'; });
+    });
+  }
+
+  function buildBA(el, urls) {
+    el.innerHTML = `
+      <button type="button" class="ba-play" aria-label="Play">
+        <svg class="ba-i-play" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+        <svg class="ba-i-pause" viewBox="0 0 24 24" aria-hidden="true"><path d="M7 5h4v14H7zM13 5h4v14h-4z"/></svg>
+      </button>
+      <div class="ba-track">
+        <div class="ba-wave" role="slider" tabindex="0" aria-label="Seek" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" style="--played:0%">
+          <div class="ba-wave-bars ba-wave-bg"></div>
+          <div class="ba-wave-bars ba-wave-fg"></div>
+        </div>
+        <div class="ba-meta"><span class="ba-time">0:00</span><span class="ba-dur">0:00</span></div>
+      </div>
+      <div class="ba-toggle" role="group" aria-label="Compare before and after">
+        <button type="button" data-side="before" aria-pressed="false">Before</button>
+        <button type="button" data-side="after" aria-pressed="true">After</button>
+      </div>`;
+
+    paintWave(el, seededPeaks(el.dataset.audio, WAVE_BARS));
+    decodePeaks(urls.after, WAVE_BARS).then(real => { if (real) paintWave(el, real); });
+
+    /* desktop: both versions play in lock-step and the toggle swaps which one is audible.
+       iOS: Safari won't reliably play two <audio> at once, so one element swaps its source
+       and resumes from the same position. */
+    const isIOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    const single = isIOS ? new Audio(urls.after) : null;
+    const tracks = single ? { before: single, after: single } : { before: new Audio(urls.before), after: new Audio(urls.after) };
+    let side = 'after';
+    const cur = () => tracks[side];
+    const all = fn => [...new Set(Object.values(tracks))].forEach(fn);
+    all(a => { a.preload = 'metadata'; a.playsInline = true; });
+    if (!single) tracks.before.muted = true;
+
+    const playBtn = el.querySelector('.ba-play');
+    const wave = el.querySelector('.ba-wave');
+    const timeEl = el.querySelector('.ba-time');
+    const durEl = el.querySelector('.ba-dur');
+    let rafId = null;
+
+    function render() {
+      const a = cur(), pct = a.duration ? a.currentTime / a.duration * 100 : 0;
+      wave.style.setProperty('--played', pct + '%');
+      wave.setAttribute('aria-valuenow', Math.round(pct));
+      timeEl.textContent = fmtTime(a.currentTime);
+      durEl.textContent = fmtTime(a.duration);
+    }
+    function tick() { render(); if (el.classList.contains('is-playing')) rafId = requestAnimationFrame(tick); }
+    function seek(t) { all(a => { a.currentTime = t; }); render(); }
+    function stop() {
+      all(a => a.pause());
+      el.classList.remove('is-playing');
+      playBtn.setAttribute('aria-label', 'Play');
+      if (rafId) cancelAnimationFrame(rafId);
+    }
+
+    playBtn.addEventListener('click', () => {
+      if (cur().paused) {
+        const t = cur().currentTime;
+        all(a => { a.currentTime = t; a.play().catch(() => {}); });
+        el.classList.add('is-playing');
+        playBtn.setAttribute('aria-label', 'Pause');
+        tick();
+      } else stop();
+    });
+    el.querySelectorAll('.ba-toggle button').forEach(btn => btn.addEventListener('click', () => {
+      const t = cur().currentTime, playing = !cur().paused;
+      if (btn.dataset.side === side) return;
+      side = btn.dataset.side;
+      if (single) {
+        single.src = urls[side];
+        single.addEventListener('loadedmetadata', () => {
+          single.currentTime = t;
+          if (playing) single.play().catch(() => {});
+          render();
+        }, { once: true });
+      } else {
+        all(a => { a.muted = a !== cur(); });
+        if (Math.abs(cur().currentTime - t) > 0.05) cur().currentTime = t;
+      }
+      el.querySelectorAll('.ba-toggle button').forEach(b => b.setAttribute('aria-pressed', String(b === btn)));
+      render();
+    }));
+    /* pointer events cover click-to-seek and drag-to-scrub (mouse + touch) in one path */
+    let dragging = false;
+    const posToTime = clientX => {
+      const r = wave.getBoundingClientRect();
+      return Math.max(0, Math.min(1, (clientX - r.left) / r.width)) * (cur().duration || 0);
+    };
+    wave.addEventListener('pointerdown', e => {
+      dragging = true;
+      wave.setPointerCapture(e.pointerId);
+      if (cur().duration) seek(posToTime(e.clientX));
+    });
+    wave.addEventListener('pointermove', e => { if (dragging && cur().duration) seek(posToTime(e.clientX)); });
+    ['pointerup', 'pointercancel'].forEach(ev => wave.addEventListener(ev, () => { dragging = false; }));
+    wave.addEventListener('keydown', e => {
+      const step = { ArrowRight: 5, ArrowLeft: -5 }[e.key];
+      if (step && cur().duration) { e.preventDefault(); seek(Math.max(0, Math.min(cur().duration, cur().currentTime + step))); }
+    });
+    all(a => {
+      a.addEventListener('timeupdate', () => { if (a === cur()) render(); });
+      a.addEventListener('loadedmetadata', render);
+      a.addEventListener('ended', () => { stop(); seek(0); });
+    });
+
+    el.baStop = stop;
+    el.hidden = false;
+  }
 
   /* ---- WAVE BARS ---- */
   /* Portfolio accordion — loads Spotify embed on open, clears on close */
@@ -2996,9 +3586,13 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
         r.querySelector('.portfolio-row-trigger').setAttribute('aria-expanded', 'false');
         const f = r.querySelector('.spot-player iframe');
         if (f) f.src = '';
+        const ba = r.querySelector('.ba-player');
+        if (ba && ba.baStop) ba.baStop();
       });
       if (!isOpen) {
         row.classList.add('is-open');
+        const ba = row.querySelector('.ba-player');
+        if (ba) setupBA(ba);
         row.querySelector('.portfolio-row-trigger').setAttribute('aria-expanded', 'true');
         const player = row.querySelector('.spot-player');
         const iframe = player.querySelector('iframe');
@@ -3025,13 +3619,17 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
     const canvas = document.getElementById('soundwaveCanvas');
     if (!canvas) return;
     const ctx = canvas.getContext('2d');
-    let W = 0, H = 0, visible = true, t = 0;
+    const textBox = canvas.parentElement.querySelector('.manifesto-inner');
+    let W = 0, H = 0, visible = true, t = 0, top = 0;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
+    /* rings sit in the space above the text (top = where the copy begins) */
     function resize() {
       const r = canvas.getBoundingClientRect();
       W = canvas.width  = Math.round(r.width  * dpr);
       H = canvas.height = Math.round(r.height * dpr);
+      const text = textBox.querySelector('.manifesto-text');
+      top = (textBox.offsetTop + text.offsetTop) * dpr;
     }
 
     const SPREAD = 1.45;   /* ≈ 83° half-angle — wider arc spread */
@@ -3043,9 +3641,9 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
 
       const isMob  = (W / dpr) < 560;
       const cx     = W * 0.5;
-      const cy     = H * 0.5;
+      const cy     = top * 0.5;
       const minDim = Math.min(W, H);
-      const innerR = minDim * 0.16;
+      const innerR = Math.min(minDim * 0.16, top * 0.2);
       const maxR   = Math.max(minDim * 0.88, W * 0.46);
       const nW     = isMob ? 4 : NWAVES;
 
@@ -3093,32 +3691,172 @@ html.intro-lock, html.intro-lock body { overflow: hidden; background: #000; }
       ctx.fillStyle = vig;
       ctx.fillRect(0, 0, W, H);
 
+      /* fade everything out before it reaches the copy */
+      const fade = ctx.createLinearGradient(0, top * 0.78, 0, top);
+      fade.addColorStop(0, 'rgba(0,0,0,0)');
+      fade.addColorStop(1, 'rgba(0,0,0,1)');
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.fillStyle = fade;
+      ctx.fillRect(0, top * 0.78, W, H);
+      ctx.globalCompositeOperation = 'source-over';
+
       t += 0.012;
-      requestAnimationFrame(draw);
+      if (!reduceMotion) requestAnimationFrame(draw);
     }
 
     new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { threshold: 0 }).observe(canvas);
     window.addEventListener('resize', resize, { passive: true });
+    if (document.fonts) document.fonts.ready.then(resize);
     resize();
     draw();
   })();
 
+  /* ================================================================
+     3D SOUND TERRAIN — waveform rows projected in perspective (portfolio).
+     Plain 2D canvas, no library. Back-to-front with an occluding fill so
+     nearer ridges hide farther ones. Swells while a Before/After plays.
+     ================================================================ */
+  (function () {
+    const canvas = document.getElementById('terrainCanvas');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const section = canvas.parentElement;
+    const BG = '#0d0e10';
+    let W = 0, H = 0, dpr = 1, rows = 0, cols = 0, visible = false, t = 0, energy = 0.55, frame = 0;
+    const cam = { x: 0, tx: 0, tilt: 0 };
+
+    let cxFrac = 0.5, near = 1.1, amp = 0.55;
+    function resize() {
+      const mob = section.clientWidth < 761;
+      // desktop: terrain ends where the heading block ends, so it never runs under the project rows
+      const head = section.querySelector('.portfolio-header');
+      canvas.style.height = mob ? '' : Math.round(head.getBoundingClientRect().bottom - section.getBoundingClientRect().top - 8) + 'px';
+      cxFrac = mob ? 0.5 : 0.7;
+      near = mob ? 1.1 : 1.6;
+      amp = mob ? 0.55 : 0.85;
+      const r = canvas.getBoundingClientRect();
+      dpr = Math.min(window.devicePixelRatio || 1, mob ? 1.5 : 2);
+      W = canvas.width = Math.round(r.width * dpr);
+      H = canvas.height = Math.round(r.height * dpr);
+      rows = mob ? 18 : 30;
+      cols = mob ? 56 : 110;
+    }
+
+    // a "spectrum" profile: tall in the low-mids, soft at the edges, slowly breathing
+    function height(x, z, time) {
+      const env = Math.exp(-Math.pow((x + 0.15) * 1.7, 2));
+      const w = Math.sin(x * 9 + time * 1.3 + z * 0.9) * 0.5
+              + Math.sin(x * 23 - time * 2.1 + z * 1.7) * 0.22
+              + Math.sin(x * 4.2 + time * 0.6 - z * 0.5) * 0.38;
+      return Math.max(0, (w * 0.5 + 0.55)) * env;
+    }
+
+    function draw() {
+      if (visible || frame === 0) {
+        frame++;
+        if (frame % 20 === 0) {   // cheap check: is a Before/After track playing?
+          const playing = !!document.querySelector('.ba-player.is-playing');
+          energy += ((playing ? 1.15 : 0.55) - energy) * 0.5;
+        }
+        cam.x += (cam.tx - cam.x) * 0.04;
+        const rect = section.getBoundingClientRect();
+        const prog = Math.max(-1, Math.min(1, rect.top / window.innerHeight));   // section position on screen
+        cam.tilt += (prog - cam.tilt) * 0.08;
+
+        ctx.clearRect(0, 0, W, H);
+        const horizon = H * (0.28 + cam.tilt * 0.06);
+        const fov = H * 0.9, camH = 0.62, far = 6.5;
+        for (let r = rows - 1; r >= 0; r--) {                     // back to front
+          const z = near + (far - near) * (r / (rows - 1));
+          const depth = 1 - r / (rows - 1);
+          const ridge = new Path2D();
+          let fx = 0, lx = 0;
+          for (let c = 0; c <= cols; c++) {
+            const x = -1.6 + 3.2 * (c / cols);
+            const y = height(x, z, t) * amp * energy;
+            const sx = W * cxFrac + ((x - cam.x * 0.25) * fov) / z;
+            const sy = horizon + ((camH - y) * fov) / z;
+            if (c) ridge.lineTo(sx, sy); else { ridge.moveTo(sx, sy); fx = sx; }
+            lx = sx;
+          }
+          const body = new Path2D(ridge);                         // same ridge, closed down to the bottom
+          body.lineTo(lx, H); body.lineTo(fx, H); body.closePath();
+          ctx.fillStyle = BG;
+          ctx.fill(body);                                         // hide the ridges behind
+          ctx.strokeStyle = `rgba(255,255,255,${(0.05 + depth * 0.3).toFixed(3)})`;
+          ctx.lineWidth = (0.6 + depth * 0.9) * dpr;
+          ctx.stroke(ridge);                                      // only the waveform, not the fill edges
+        }
+        if (!reduceMotion) t += 0.006;
+      }
+      if (!reduceMotion) requestAnimationFrame(draw);
+    }
+
+    new IntersectionObserver(es => { visible = es[0].isIntersecting; }, { rootMargin: '100px 0px' }).observe(canvas);
+    window.addEventListener('resize', resize, { passive: true });
+    if (finePointer) section.addEventListener('pointermove', e => {
+      const r = section.getBoundingClientRect();
+      cam.tx = (e.clientX - r.left) / r.width * 2 - 1;
+    }, { passive: true });
+    resize();
+    draw();
+  })();
+
+  /* ---- 3D TILT + MAGNETIC BUTTONS — desktop pointers only, off with reduced motion ---- */
+  if (finePointer && !reduceMotion) {
+    document.querySelectorAll('.tilt').forEach(el => {
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width, py = (e.clientY - r.top) / r.height;
+        el.style.setProperty('--ry', ((px - 0.5) * 7).toFixed(2) + 'deg');
+        el.style.setProperty('--rx', ((0.5 - py) * 5).toFixed(2) + 'deg');
+        el.style.setProperty('--lx', (px * 100).toFixed(1) + '%');
+        el.style.setProperty('--ly', (py * 100).toFixed(1) + '%');
+        el.classList.add('is-tilting');
+      });
+      el.addEventListener('pointerleave', () => {
+        el.style.setProperty('--rx', '0deg'); el.style.setProperty('--ry', '0deg');
+        el.classList.remove('is-tilting');
+      });
+    });
+    document.querySelectorAll('.portfolio-row').forEach(el => {
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--px', ((e.clientX - r.left) / r.width).toFixed(3));
+        el.style.setProperty('--py', ((e.clientY - r.top) / r.height).toFixed(3));
+      });
+      el.addEventListener('pointerleave', () => {
+        el.style.setProperty('--px', '0.5'); el.style.setProperty('--py', '0.5');
+      });
+    });
+    document.querySelectorAll('.magnetic').forEach(el => {
+      el.addEventListener('pointermove', e => {
+        const r = el.getBoundingClientRect();
+        el.style.setProperty('--magx', ((e.clientX - r.left - r.width / 2) * 0.14).toFixed(1) + 'px');
+        el.style.setProperty('--magy', ((e.clientY - r.top - r.height / 2) * 0.22).toFixed(1) + 'px');
+      });
+      el.addEventListener('pointerleave', () => { el.style.setProperty('--magx', '0px'); el.style.setProperty('--magy', '0px'); });
+    });
+  }
 
 })();
 
 /* ── Crossfade slideshow helper ── */
-function startSlideshow(imgs, interval) {
-  if (imgs.length < 2) return;
+function startSlideshow(imgs, interval, delay) {
+  if (imgs.length < 2 || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
   var cur = 0;
-  setInterval(function () {
+  setTimeout(function () { setInterval(function () {
     imgs[cur].classList.remove('active');
     cur = (cur + 1) % imgs.length;
     imgs[cur].classList.add('active');
-  }, interval);
+  }, interval); }, delay || 0);
 }
 
-startSlideshow(Array.from(document.querySelectorAll('.about-img img')), 7000);
-startSlideshow(Array.from(document.querySelectorAll('.hero-bg-img img')), 6000);
+startSlideshow(Array.from(document.querySelectorAll('.about-img img')), 8000);
+/* hero holds its first photo until the entrance has settled */
+function startHeroSlideshow() { startSlideshow(Array.from(document.querySelectorAll('.hero-bg-img img')), 7000, 4000); }
+if (document.documentElement.classList.contains('intro-lock')) document.addEventListener('introdone', startHeroSlideshow, { once: true });
+else startHeroSlideshow();
 
 </script>
 
